@@ -65,7 +65,7 @@ public class DocumentManager extends Database {
             connection.commit();
         }
         if (document.getType().toLowerCase().equals("journal_article")) {
-
+            final JournalArticle document1 = (JournalArticle) document;
         }
     }
 

@@ -3,6 +3,7 @@ package Service;
 import DataBase.DocumentManager;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Book extends Document {
     private Boolean isReference;
@@ -24,6 +25,7 @@ public class Book extends Document {
         this.edition = edition;
         this.editionYear = editionYear;
     }
+
     public Book(int id,String title, int value,
                 Boolean isReference, Boolean isBestSeller,
                 String publisher, LocalDate dateOfPublishing,
@@ -97,8 +99,12 @@ public class Book extends Document {
 
     }
 
-    public static void retrieveAll(DocumentManager dm) throws Exception {
+    public static ArrayList<Book> retrieveAll(DocumentManager dm) throws Exception {
+        return null;
+    }
 
+    public static Book retrieve(DocumentManager dm, int id) throws Exception {
+        return null;
     }
 
     public static void update(DocumentManager dm,
