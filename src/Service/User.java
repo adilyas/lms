@@ -4,7 +4,15 @@ public class User extends Person {
     private String phoneNumber;
     String type;
 
-    public User(String phoneNumber, String type) {
+    public User(String name, String surname, String phoneNumber, String type) {
+        super(name, surname, type);
+        this.phoneNumber = phoneNumber;
+        this.type = type;
+    }
+
+    public User(int id, String name, String surname,
+                String phoneNumber, String type) {
+        super(id, name, surname, type);
         this.phoneNumber = phoneNumber;
         this.type = type;
     }

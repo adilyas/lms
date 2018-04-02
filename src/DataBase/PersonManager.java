@@ -26,9 +26,10 @@ public class PersonManager extends Database {
 
         if (person instanceof Author) {
             String addAuthorQuery = "insert into authors values(?);";
-            PreparedStatement st = connection.prepareStatement(addAuthorQuery);
-            st.setInt(1, personId);
-            st.executeUpdate();
+            PreparedStatement stAddAuthor =
+                    connection.prepareStatement(addAuthorQuery);
+            stAddAuthor.setInt(1, personId);
+            stAddAuthor.executeUpdate();
             connection.commit();
         }
     }
@@ -55,6 +56,8 @@ public class PersonManager extends Database {
 
             return resAuthor;
         }
+
+        return null;
     }
 
     private int getLastPersonId() throws Exception {

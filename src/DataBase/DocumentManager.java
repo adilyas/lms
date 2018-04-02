@@ -1,9 +1,6 @@
 package DataBase;
 
-import Service.Author;
-import Service.Book;
-import Service.Document;
-import Service.Person;
+import Service.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,24 +28,49 @@ public class DocumentManager extends Database {
         linkKeyWords(keywords, documentId);
 
 
-        if (document instanceof Book) {
+        if (document.getType().toLowerCase().equals("book")) {
             final Book document1 = (Book) document;
-            String bookAddQuery = "insert into books values(?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement st = connection.prepareStatement(bookAddQuery);
-            st.setInt(1, documentId);
-            st.setInt(2, (document1.getReference() ? 1 : 0));
-            st.setInt(3, (document1.getBestSeller() ? 1 : 0));
-            st.setString(4, document1.getPublisher());
-            st.setDate(5, java.sql.Date.valueOf(document1.getDateOfPublishingStr()));
-            st.setInt(6, document1.getEdition());
-            st.setInt(7, document1.getEditionYear());
-            st.executeUpdate();
+            String bookAddQuery = "insert into books values(?, ?, ?, ?, ?, ?, ?);";
+            PreparedStatement stAddBook = connection.prepareStatement(bookAddQuery);
+            stAddBook.setInt(1, documentId);
+            stAddBook.setInt(2, (document1.getReference() ? 1 : 0));
+            stAddBook.setInt(3, (document1.getBestSeller() ? 1 : 0));
+            stAddBook.setString(4, document1.getPublisher());
+            stAddBook.setDate(5,
+                    java.sql.Date.valueOf(document1.getDateOfPublishingStr()));
+            stAddBook.setInt(6, document1.getEdition());
+            stAddBook.setInt(7, document1.getEditionYear());
+            stAddBook.executeUpdate();
             connection.commit();
+        }
+        if (document.getType().toLowerCase().equals("journal")) {
+            final Journal document1 = (Journal) document;
+            String journalAddQuery = "insert into journals values(?, ?, ?, ?);";
+            PreparedStatement stAddJournal =
+                    connection.prepareStatement(journalAddQuery);
+            stAddJournal.setInt(1, documentId);
+            stAddJournal.setInt(2, (document1.getReference() ? 1 : 0));
+            stAddJournal.setString(3, document1.getPublisher());
+            stAddJournal.setDate(4,
+                    java.sql.Date.valueOf(document1.getIssueStr()));
+            stAddJournal.executeUpdate();
+            connection.commit();
+        }
+        if (document.getType().toLowerCase().equals("av_material")) {
+            final AVMaterial document1 = (AVMaterial) document;
+            String avmAddQuery = "insert into av_materials values(?);";
+            PreparedStatement stAddAVM = connection.prepareStatement(avmAddQuery);
+            stAddAVM.setInt(1, documentId);
+            stAddAVM.executeUpdate();
+            connection.commit();
+        }
+        if (document.getType().toLowerCase().equals("journal_article")) {
+
         }
     }
 
     public Document find() {
-
+        return null;
     }
 
     private Boolean keywordsExists(String keyword) throws Exception {
@@ -63,10 +85,10 @@ public class DocumentManager extends Database {
 
     private int addKeyWordIfNotExists(String keyword) throws Exception {
         int wordId;
-        if (!keywordsExists()) {
+        if (!keywordsExists(keyword)) {
             String query = "insert into keywords (word) values(?);";
             PreparedStatement st = connection.prepareStatement(query);
-            st.setString(keyword);
+            st.setString(1, keyword);
             st.executeUpdate();
             connection.commit();
 
@@ -148,10 +170,10 @@ public class DocumentManager extends Database {
         }
     }
 
-    private int getLastId(String from) throws Exception {
+    private int getLastId(String tableName) throws Exception {
         String query = "select max(id) from ?;";
         PreparedStatement st = connection.prepareStatement(query);
-        st.setString(1, from);
+        st.setString(1, tableName);
         ResultSet rs = st.executeQuery();
         rs.next();
 

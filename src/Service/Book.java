@@ -24,25 +24,17 @@ public class Book extends Document {
         this.edition = edition;
         this.editionYear = editionYear;
     }
-
-    @Override
-    public int getId() {
-        return super.getId();
-    }
-
-    @Override
-    public int getValue() {
-        return super.getValue();
-    }
-
-    @Override
-    public String getTitle() {
-        return super.getTitle();
-    }
-
-    @Override
-    public String getType() {
-        return super.getType();
+    public Book(int id,String title, int value,
+                Boolean isReference, Boolean isBestSeller,
+                String publisher, LocalDate dateOfPublishing,
+                int edition, int editionYear) {
+        super(id, title, value, "book");
+        this.isReference = isReference;
+        this.isBestSeller = isBestSeller;
+        this.publisher = publisher;
+        this.dateOfPublishing = dateOfPublishing;
+        this.edition = edition;
+        this.editionYear = editionYear;
     }
 
     public Boolean getBestSeller() {
@@ -71,26 +63,6 @@ public class Book extends Document {
 
     public String getDateOfPublishingStr() {
         return dateOfPublishing.toString();
-    }
-
-    @Override
-    public void setId(int id) {
-        super.setId(id);
-    }
-
-    @Override
-    public void setTitle(String title) {
-        super.setTitle(title);
-    }
-
-    @Override
-    public void setType(String type) {
-        super.setType(type);
-    }
-
-    @Override
-    public void setValue(int value) {
-        super.setValue(value);
     }
 
     public void setBestSeller(Boolean bestSeller) {
