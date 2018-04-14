@@ -1,11 +1,8 @@
-package DataBase;
+package Database;
 
-import Service.Author;
-import Service.Document;
-import Service.Person;
+import Objects.Author;
+import Objects.Person;
 
-import javax.print.Doc;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;

@@ -1,11 +1,9 @@
-package DataBase;
+package Database;
 
-import Service.*;
+import Objects.*;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 public class DocumentManager extends Database {
