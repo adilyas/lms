@@ -29,6 +29,19 @@ public class PersonDAO {
         }
     }
 
+    static Person getByName(Person person) throws SQLException {
+        String query = "select * from persons where name = ? and surname = ?;";
+        PreparedStatement st = db.getConnection().prepareStatement(query);
+        st.setString(1, person.getName());
+        st.setString(2, person.getSurname());
+        ResultSet rs = st.executeQuery();
+        db.getConnection().commit();
+        if (rs.next()) {
+            return new Person(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
 
     static void insert(Person person) throws SQLException {
         String query = "insert into persons (name, surname) " +
