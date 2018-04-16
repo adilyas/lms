@@ -1,26 +1,42 @@
 package Objects;
 
+import Database.DocumentManager;
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Book extends Document {
-    private boolean isReference;
-    private boolean isBestSeller;
+    private Boolean isReference;
+    private Boolean isBestSeller;
     private String publisher;
     private LocalDate dateOfPublishing;
     private int edition;
     private int editionYear;
 
-    public Book(int id, String title, int value,
-                boolean isReference, boolean isBestSeller,
+    public Book(String title, int value,
+                Boolean isReference, Boolean isBestSeller,
                 String publisher, LocalDate dateOfPublishing,
                 int edition, int editionYear) {
-        super(id, title, value);
+        super(title, value, "book");
+        this.isReference = isReference;
+        this.isBestSeller = isBestSeller;
+        this.publisher = publisher;
         this.dateOfPublishing = dateOfPublishing;
         this.edition = edition;
         this.editionYear = editionYear;
-        this.isBestSeller = isBestSeller;
+    }
+
+    public Book(int id,String title, int value,
+                Boolean isReference, Boolean isBestSeller,
+                String publisher, LocalDate dateOfPublishing,
+                int edition, int editionYear) {
+        super(id, title, value, "book");
         this.isReference = isReference;
+        this.isBestSeller = isBestSeller;
         this.publisher = publisher;
+        this.dateOfPublishing = dateOfPublishing;
+        this.edition = edition;
+        this.editionYear = editionYear;
     }
 
     public Boolean getBestSeller() {
@@ -73,5 +89,33 @@ public class Book extends Document {
 
     public void setReference(Boolean reference) {
         isReference = reference;
+    }
+
+    public static void add(DocumentManager dm,
+                           String title, int value,
+                           Boolean isReference, Boolean isBestSeller,
+                           String publisher, LocalDate dateOfPublishing,
+                           int edition, int editionYear) throws Exception {
+
+    }
+
+    public static ArrayList<Book> retrieveAll(DocumentManager dm) throws Exception {
+        return null;
+    }
+
+    public static Book retrieve(DocumentManager dm, int id) throws Exception {
+        return null;
+    }
+
+    public static void update(DocumentManager dm,
+                              String title, int value,
+                              Boolean isReference, Boolean isBestSeller,
+                              String publisher, LocalDate dateOfPublishing,
+                              int edition, int editionYear) throws Exception {
+
+    }
+
+    public static void delete(DocumentManager dm, int id) {
+
     }
 }

@@ -8,7 +8,14 @@ public class Journal extends Document {
     private LocalDate issue;
 
     public Journal(int id, String title, int value, Boolean isReference, String publisher, LocalDate issue) {
-        super(id, title, value);
+        super(id, title, value, "journal");
+        this.isReference = isReference;
+        this.publisher = publisher;
+        this.issue = issue;
+    }
+
+    public Journal(String title, int value, Boolean isReference, String publisher, LocalDate issue) {
+        super(title, value, "journal");
         this.isReference = isReference;
         this.publisher = publisher;
         this.issue = issue;

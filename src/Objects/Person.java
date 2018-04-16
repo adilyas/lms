@@ -1,17 +1,23 @@
 package Objects;
 
 public class Person {
-    private int id;
+    private Integer id;
     private String name;
     private String surname;
 
-    public Person(int id, String name, String surname) {
+
+    public Person(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
+    public Person(Integer id, String name, String surname) {
         this.id = id;
         this.name = name;
         this.surname = surname;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -23,7 +29,11 @@ public class Person {
         return surname;
     }
 
-    public void setId(int id) {
+    public String getType() {
+        return type;
+    }
+
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,5 +43,9 @@ public class Person {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

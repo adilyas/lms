@@ -14,7 +14,7 @@ public class DocumentDAO {
     static private Database db;
 
     static void setDb(Database dbb){
-        db = db;
+        db = dbb;
     }
 
     static Document get(int ID) {
@@ -61,7 +61,7 @@ public class DocumentDAO {
         PreparedStatement addConSt = db.getConnection().prepareStatement(addCon);
         for (int i = 0; i < authors.size(); i++) {
 
-            Author author = (Author) pm.find(authors.get(i));
+            Author author = (Author) (authors.get(i));
             if (author == null) {
                 pm.addPerson((Author) authors.get(i));
                 author = (Author) pm.find(authors.get(i));
