@@ -19,7 +19,7 @@ public final class BookDAO {
     }
 
     static void insert(Book book) throws SQLException {
-        DocumentDAO.
+//        DocumentDAO.
 
 
         if (document.getType().toLowerCase().equals("book")) {

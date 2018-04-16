@@ -3,7 +3,7 @@ package Database;
 import java.sql.Connection;
 
 public class Database {
-    private Connection connection;
+    Connection connection;
 
 
     public void setConnection(Connection connection) {
