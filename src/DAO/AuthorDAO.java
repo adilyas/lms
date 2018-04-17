@@ -3,6 +3,7 @@ package DAO;
 import Database.Database;
 import Objects.Author;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ public class AuthorDAO {
 
     static private Database db;
 
-    static void setDb(Database dbb) {
+    static void setConnection(Database dbb) {
         db = dbb;
     }
 

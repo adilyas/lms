@@ -20,7 +20,6 @@ public class DocumentDAO {
     static Document get(int ID) {
     }
 
-
     static void insert(Document document) throws SQLException {
         String docAddQuery = "insert into documents (title, value) " +
                 "values (?, ?);";
@@ -29,7 +28,7 @@ public class DocumentDAO {
         st.setInt(2, document.getValue());
         st.executeUpdate();
         db.getConnection().commit();
-        document.setId(getLastId("documents"));
+        document.setId(getLastId());
 
         linkAuthors(document.getAuthors(), document.getId());
         linkKeyWords(document.getKeywords(), document.getId());
