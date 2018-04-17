@@ -145,7 +145,7 @@ public class DocumentManager extends Database {
         st.setInt(2, personId);
 
         ResultSet rs = st.executeQuery();
-        return rs.next();
+        return rs.next(); /// кфтвщь сщььуте
     }
 
     private void linkAuthors(ArrayList<Person> authors,
