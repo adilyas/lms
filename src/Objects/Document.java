@@ -1,5 +1,6 @@
 package Objects;
 
+import java.security.Key;
 import java.util.Collection;
 
 public class Document {
@@ -7,22 +8,18 @@ public class Document {
     private String title;
     private int value;
     private Collection<Author> authors;
-    private Collection<String> keywords;
-    private String type;
-
-    public Document(String title, int value, String type, Collection<Author> authors, Collection<String> keywords) {
+    private Collection<Keyword> keywords;
+    public Document(String title, int value, Collection<Author> authors, Collection<Keyword> keywords) {
         this.title = title;
         this.value = value;
-        this.type = type;
         this.authors = authors;
         this.keywords = keywords;
     }
 
-    public Document(int id, String title, int value, String type, Collection<Author> authors, Collection<String> keywords) {
+    public Document(int id, String title, int value, Collection<Author> authors, Collection<Keyword> keywords) {
         this.id = id;
         this.title = title;
         this.value = value;
-        this.type = type;
         this.authors = authors;
         this.keywords = keywords;
     }
@@ -39,10 +36,6 @@ public class Document {
         return title;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
@@ -55,10 +48,6 @@ public class Document {
         this.value = value;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public Collection<Author> getAuthors() {
         return authors;
     }
@@ -67,11 +56,11 @@ public class Document {
         this.authors = authors;
     }
 
-    public Collection<String> getKeywords() {
+    public Collection<Keyword> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(Collection<String> keywords) {
+    public void setKeywords(Collection<Keyword> keywords) {
         this.keywords = keywords;
     }
 }

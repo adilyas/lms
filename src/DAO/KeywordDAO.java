@@ -1,81 +1,77 @@
 package DAO;
 
 import Database.Database;
-import Objects.Person;
+import Objects.Keyword;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
-public class PersonDAO {
-
+public class KeywordDAO {
     static private Database db;
 
     static void setDb(Database dbb) {
         db = dbb;
     }
 
-    static Person get(int ID) throws SQLException {
-        String query = "select * from persons where id = ?;";
+    static Keyword get(int ID) throws SQLException {
+        String query = "select * from keywords where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, ID);
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
-            return new Person(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
+            return new Keyword(rs.getInt("id"), rs.getString("word"));
         } else {
             throw new NoSuchElementException();
         }
     }
 
-    static Person getByName(Person person) throws SQLException {
-        String query = "select * from persons where name = ? and surname = ?;";
+    static Keyword getByWord(Keyword word) throws SQLException {
+        String query = "select * from keywords where name = ? and surname = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, person.getName());
-        st.setString(2, person.getSurname());
+        st.setString(1, word.getWord());
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
-            return new Person(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
+            return new Keyword(rs.getInt("id"), rs.getString("word"));
         } else {
             throw new NoSuchElementException();
         }
     }
 
-    static void insert(Person person) throws SQLException {
-        String query = "insert into persons (name, surname) " +
-                "values (?, ?);";
+    static void insert(Keyword keyword) throws SQLException {
+        String query = "insert into keywords (word) " +
+                "values (?);";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, person.getName());
-        st.setString(2, person.getSurname());
+        st.setString(1, keyword.getWord());
         st.executeUpdate();
         db.getConnection().commit();
-        person.setId(PersonDAO.getLastId());
+        keyword.setId(KeywordDAO.getLastId());
     }
 
-    static void update(Person person) throws SQLException {
-        String query = "update persons set" +
-                "name = ?" +
-                "suname = ? where id = ?;";
+    static void update(Keyword keyword) throws SQLException {
+        String query = "update keywords set" +
+                "word = ? " +
+                "where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, person.getName());
-        st.setString(2, person.getSurname());
-        st.setInt(3, person.getId());
+        st.setString(1, keyword.getWord());
+        st.setInt(2, keyword.getId());
         st.executeUpdate();
         db.getConnection().commit();
     }
 
-    static void delete(Person person) throws SQLException {
-        String query = "delete from persons where id = ?;";
+    static void delete(Keyword keyword) throws SQLException {
+        String query = "delete from keywords where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setInt(1, person.getId());
+        st.setInt(1, keyword.getId());
         st.executeUpdate();
         db.getConnection().commit();
     }
 
     static int getLastId() throws SQLException {
-        String query = "select LAST_INSERT_ID() from persons;";
+        String query = "select LAST_INSERT_ID() from keywords;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         ResultSet rs = st.executeQuery();
         rs.next();

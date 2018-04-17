@@ -45,9 +45,8 @@ public final class BookDAO {
     }
 
     static private int getLastId() throws SQLException {
-        String query = "select LAST_INSERT_ID() from ?;";
+        String query = "select LAST_INSERT_ID() from books;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, "books");
         ResultSet rs = st.executeQuery();
         rs.next();
 

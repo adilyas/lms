@@ -29,10 +29,6 @@ public class Person {
         return surname;
     }
 
-    public String getType() {
-        return type;
-    }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -43,9 +39,5 @@ public class Person {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }
