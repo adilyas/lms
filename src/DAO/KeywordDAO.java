@@ -71,9 +71,8 @@ public class KeywordDAO {
     }
 
     static int getLastId() throws SQLException {
-        String query = "select LAST_INSERT_ID() from ?;";
+        String query = "select LAST_INSERT_ID() from keywords;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, "keywords");
         ResultSet rs = st.executeQuery();
         rs.next();
 

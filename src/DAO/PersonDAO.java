@@ -75,9 +75,8 @@ public class PersonDAO {
     }
 
     static int getLastId() throws SQLException {
-        String query = "select LAST_INSERT_ID() from ?;";
+        String query = "select LAST_INSERT_ID() from persons;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, "persons");
         ResultSet rs = st.executeQuery();
         rs.next();
 
