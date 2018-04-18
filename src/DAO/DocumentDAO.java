@@ -83,7 +83,46 @@ public class DocumentDAO {
         }
     }
 
-    static void update(Document document) {
+    static void update(Document document) throws SQLException {
+        String query = "update documents set (title, value) " +
+                "values (?, ?) where id = ?;";
+        PreparedStatement st = db.getConnection().prepareStatement(query);
+        st.setInt(1, document.getId());
+        st.executeUpdate();
+        db.getConnection().commit();
+        document.setId(getLastId());
+
+        query = "delete from author_of_document where document_id = ?;";
+        st = db.getConnection().prepareStatement(query);
+        st.setInt(1, document.getId());
+        st.executeUpdate();
+        db.getConnection().commit();
+
+        query = "insert into author_of_document values(?, ?);";
+        st = db.getConnection().prepareStatement(query);
+
+        for (Author author : document.getAuthors()) {
+            st.setInt(1, document.getId());
+            st.setInt(2, author.getId());
+            st.executeUpdate();
+            db.getConnection().commit();
+        }
+
+        query = "delete from document_has_keyword where document_id = ?;";
+        st = db.getConnection().prepareStatement(query);
+        st.setInt(1, document.getId());
+        st.executeUpdate();
+        db.getConnection().commit();
+
+        query = "insert into document_has_keyword values(?, ?);";
+        st = db.getConnection().prepareStatement(query);
+
+        for (Keyword word : document.getKeywords()) {
+            st.setInt(1, document.getId());
+            st.setInt(2, word.getId());
+            st.executeUpdate();
+            db.getConnection().commit();
+        }
     }
 
     static void delete(Document document) throws SQLException {
