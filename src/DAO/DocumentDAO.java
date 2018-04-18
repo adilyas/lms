@@ -89,7 +89,6 @@ public class DocumentDAO {
         st.setInt(1, document.getId());
         st.executeUpdate();
         db.getConnection().commit();
-        document.setId(getLastId());
 
         query = "delete from author_of_document where document_id = ?;";
         st = db.getConnection().prepareStatement(query);

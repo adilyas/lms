@@ -1,46 +1,55 @@
 package Objects;
 
-import Database.DocumentManager;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collection;
 
 public class Book extends Document {
     private Boolean isReference;
-    private Boolean isBestSeller;
+    private Boolean isBestseller;
     private String publisher;
     private LocalDate dateOfPublishing;
     private int edition;
     private int editionYear;
 
-    public Book(String title, int value,
-                Boolean isReference, Boolean isBestSeller,
-                String publisher, LocalDate dateOfPublishing,
-                int edition, int editionYear) {
-        super(title, value, "book");
+    public Book(String title, int value, Collection<Author> authors, Collection<Keyword> keywords, Boolean isReference,
+                Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition, int editionYear) {
+        super(title, value, authors, keywords);
         this.isReference = isReference;
-        this.isBestSeller = isBestSeller;
+        this.isBestseller = isBestseller;
         this.publisher = publisher;
         this.dateOfPublishing = dateOfPublishing;
         this.edition = edition;
         this.editionYear = editionYear;
     }
 
-    public Book(int id,String title, int value,
-                Boolean isReference, Boolean isBestSeller,
-                String publisher, LocalDate dateOfPublishing,
-                int edition, int editionYear) {
-        super(id, title, value, "book");
+    /**
+     *
+     * @param id id
+     * @param title title
+     * @param value value
+     * @param authors authors
+     * @param keywords keywords
+     * @param isReference isReference
+     * @param isBestseller isBestseller
+     * @param publisher publisher
+     * @param dateOfPublishing dateOfPublishing
+     * @param edition edition
+     * @param editionYear editionsYear
+     */
+    public Book(int id, String title, int value, Collection<Author> authors, Collection<Keyword> keywords,
+                Boolean isReference, Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition,
+                int editionYear) {
+        super(id, title, value, authors, keywords);
         this.isReference = isReference;
-        this.isBestSeller = isBestSeller;
+        this.isBestseller = isBestseller;
         this.publisher = publisher;
         this.dateOfPublishing = dateOfPublishing;
         this.edition = edition;
         this.editionYear = editionYear;
     }
 
-    public Boolean getBestSeller() {
-        return isBestSeller;
+    public Boolean getBestseller() {
+        return isBestseller;
     }
 
     public Boolean getReference() {
@@ -63,12 +72,8 @@ public class Book extends Document {
         return dateOfPublishing;
     }
 
-    public String getDateOfPublishingStr() {
-        return dateOfPublishing.toString();
-    }
-
-    public void setBestSeller(Boolean bestSeller) {
-        isBestSeller = bestSeller;
+    public void setBestseller(Boolean bestSeller) {
+        isBestseller = bestSeller;
     }
 
     public void setDateOfPublishing(LocalDate dateOfPublishing) {
@@ -89,33 +94,5 @@ public class Book extends Document {
 
     public void setReference(Boolean reference) {
         isReference = reference;
-    }
-
-    public static void add(DocumentManager dm,
-                           String title, int value,
-                           Boolean isReference, Boolean isBestSeller,
-                           String publisher, LocalDate dateOfPublishing,
-                           int edition, int editionYear) throws Exception {
-
-    }
-
-    public static ArrayList<Book> retrieveAll(DocumentManager dm) throws Exception {
-        return null;
-    }
-
-    public static Book retrieve(DocumentManager dm, int id) throws Exception {
-        return null;
-    }
-
-    public static void update(DocumentManager dm,
-                              String title, int value,
-                              Boolean isReference, Boolean isBestSeller,
-                              String publisher, LocalDate dateOfPublishing,
-                              int edition, int editionYear) throws Exception {
-
-    }
-
-    public static void delete(DocumentManager dm, int id) {
-
     }
 }
