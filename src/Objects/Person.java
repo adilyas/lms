@@ -1,7 +1,7 @@
 package Objects;
 
 public class Person {
-    private Integer id;
+    private int id;
     private String name;
     private String surname;
 
@@ -11,13 +11,13 @@ public class Person {
         this.surname = surname;
     }
 
-    public Person(Integer id, String name, String surname) {
+    public Person(int id, String name, String surname) {
         this.id = id;
         this.name = name;
         this.surname = surname;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -29,7 +29,7 @@ public class Person {
         return surname;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 

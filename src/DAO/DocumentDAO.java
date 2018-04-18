@@ -20,10 +20,10 @@ public class DocumentDAO {
         db = dbb;
     }
 
-    static Document get(int ID) throws SQLException {
+    static Document get(int id) throws SQLException {
         String query = "select * from documents where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setInt(1, ID);
+        st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if(!rs.next())
