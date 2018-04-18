@@ -84,8 +84,7 @@ public class DocumentDAO {
     }
 
     static void update(Document document) throws SQLException {
-        String query = "update documents set (title, value) " +
-                "values (?, ?) where id = ?;";
+        String query = "update documents set title = ?, value = ? where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
