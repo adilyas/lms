@@ -1,6 +1,8 @@
 package DAO;
 
-import Objects.*;
+import Objects.Librarian;
+import Objects.Patron;
+import Objects.User;
 
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
@@ -50,17 +52,13 @@ public class CoolUserDAO {
 
         switch (user.getType()) {
             case "patron":
-                PatronDAO.get(id);
-                break;
+                return PatronDAO.get(id);
             case "librarian1":
-                LibrarianDAO.get(id);
-                break;
+                return LibrarianDAO.get(id);
             case "librarian2":
-                LibrarianDAO.get(id);
-                break;
+                return LibrarianDAO.get(id);
             case "librarian3":
-                LibrarianDAO.get(id);
-                break;
+                return LibrarianDAO.get(id);
             default:
                 throw new NoSuchElementException("Wrong type");
         }
