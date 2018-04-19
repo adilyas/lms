@@ -42,8 +42,8 @@ public class DocumentManager extends Database {
             connection.commit();
         }
         if (document.getType().toLowerCase().equals("journal")) {
-            final Journal document1 = (Journal) document;
-            String journalAddQuery = "insert into journals values(?, ?, ?, ?);";
+            final JournalIssue document1 = (JournalIssue) document;
+            String journalAddQuery = "insert into journal_issues values(?, ?, ?, ?);";
             PreparedStatement stAddJournal =
                     connection.prepareStatement(journalAddQuery);
             stAddJournal.setInt(1, documentId);

@@ -20,12 +20,13 @@ public class UserDAO {
     static void insert(User user) throws SQLException {
         PersonDAO.insert(user);
 
-        String query = "INSERT INTO users (person_id, phone_number, address) " +
-                "VALUES (?, ?, ?);";
+        String query = "INSERT INTO users (person_id, type, phone_number, address) " +
+                "VALUES (?, ?, ?, ?);";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, user.getId());
-        st.setString(2, user.getPhoneNumber());
-        st.setString(3, user.getAddress());
+        st.setString(2, user.getType());
+        st.setString(3, user.getPhoneNumber());
+        st.setString(4, user.getAddress());
         st.executeUpdate();
         db.getConnection().commit();
     }
@@ -49,7 +50,7 @@ public class UserDAO {
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
-            return new User(person.getId(), person.getName(), person.getSurname(), rs.getString("phone_number"),
+            return new User(person.getId(), person.getName(), person.getSurname(), rs.getString("type"), rs.getString("phone_number"),
                     rs.getString("address"));
         } else {
             throw new NoSuchElementException();
@@ -60,12 +61,14 @@ public class UserDAO {
         PersonDAO.update(user);
 
         String query = "UPDATE users SET " +
+                "type = ?" +
                 "phone_number = ?, " +
                 "address = ? WHERE person_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setString(1, user.getPhoneNumber());
-        st.setString(2, user.getAddress());
-        st.setInt(3, user.getId());
+        st.setString(1, user.getType());
+        st.setString(2, user.getPhoneNumber());
+        st.setString(3, user.getAddress());
+        st.setInt(4, user.getId());
         st.executeUpdate();
         db.getConnection().commit();
     }

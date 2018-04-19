@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 public final class BookDAO {
 
@@ -52,19 +53,21 @@ public final class BookDAO {
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        rs.next();
-        return new Book(document.getId(), document.getTitle(), document.getValue(), document.getAuthors(),
-                document.getKeywords(), rs.getBoolean("is_reference"),
-                rs.getBoolean("is_bestseller"), rs.getString("Publisher"),
-                rs.getDate("date_of_publishing").toLocalDate(), rs.getInt("edition"),
-                rs.getInt("editionYear"));
+        if (rs.next())
+            return new Book(document.getId(), document.getTitle(), document.getValue(), document.getAuthors(),
+                    document.getKeywords(), rs.getBoolean("is_reference"),
+                    rs.getBoolean("is_bestseller"), rs.getString("Publisher"),
+                    rs.getDate("date_of_publishing").toLocalDate(), rs.getInt("edition"),
+                    rs.getInt("editionYear"));
+        else
+            throw new NoSuchElementException();
     }
 
     static void update(Book book) throws SQLException {
         DocumentDAO.update(book);
 
-        String query = "update books set is_reference = ?, is_bestseller = ?, publisher = ?, date_of_publishing = ?, " +
-                "edition = ?, edition_year = ? where id = ?;";
+        String query = "UPDATE books SET is_reference = ?, is_bestseller = ?, publisher = ?, date_of_publishing = ?, " +
+                "edition = ?, edition_year = ? WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setBoolean(1, book.getReference());
         st.setBoolean(2, book.getBestseller());
@@ -75,14 +78,5 @@ public final class BookDAO {
         st.setInt(7, book.getId());
         st.executeUpdate();
         db.getConnection().commit();
-    }
-
-    static private int getLastId() throws SQLException {
-        String query = "SELECT LAST_INSERT_ID() FROM books;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
-        ResultSet rs = st.executeQuery();
-        rs.next();
-
-        return rs.getInt(1);
     }
 }

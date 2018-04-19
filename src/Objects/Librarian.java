@@ -1,4 +1,4 @@
 package Objects;
 
-public class Librarian {
+public class Librarian extends User {
 }
