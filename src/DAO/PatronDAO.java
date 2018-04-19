@@ -1,9 +1,7 @@
 package DAO;
 
 import Database.Database;
-import Objects.Document;
 import Objects.Patron;
-import Objects.Person;
 import Objects.User;
 
 import java.sql.PreparedStatement;
@@ -38,6 +36,12 @@ public class PatronDAO {
         st.setInt(1, patron.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        query = "DELETE FROM patron_booked_document WHERE person_id = ?;";
+        st = db.getConnection().prepareStatement(query);
+        st.setInt(1, patron.getId());
+        st.executeUpdate();
+        db.getConnection().commit();
     }
 
     static Patron get(int id) throws SQLException {
@@ -50,20 +54,33 @@ public class PatronDAO {
         db.getConnection().commit();
         Patron patron;
         if (rs.next()) {
-            patron = new Patron(user.getId(), user.getName(), user.getSurname(), user.getType(), user.getPhoneNumber(), user.getAddress()));
+            patron = new Patron(user.getId(), user.getName(), user.getSurname(), user.getType(), user.getPhoneNumber(),
+                    user.getAddress());
         } else {
             throw new NoSuchElementException();
         }
 
-
-        query = "select d.id from documents d join patron_booked_document pd ON d.id = pd.document_id " +
-                "join patrons p ON pd.person_id = p.person_id where p.person_id = ?";
+        query = "SELECT d.id FROM documents d JOIN patron_booked_document pd ON d.id = pd.document_id " +
+                "JOIN patrons p ON pd.person_id = p.person_id WHERE p.person_id = ?";
         st = db.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         rs = st.executeQuery();
         db.getConnection().commit();
-        while(rs.next())
-            patron.getWaitingList().add(new Document()));
+        while (rs.next())
+            patron.getWaitingList().add(CoolDocumentDAO.get(id));
 
+        query = "SELECT id FROM copies WHERE holder_id = ?";
+        st = db.getConnection().prepareStatement(query);
+        st.setInt(1, patron.getId());
+        rs = st.executeQuery();
+        db.getConnection().commit();
+        while (rs.next())
+            patron.getWaitingList().add(CopyDAO.get(id));
+
+        return patron;
+    }
+
+    static void update(Patron patron) throws SQLException {
+        UserDAO.update(patron);
     }
 }
