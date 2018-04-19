@@ -13,7 +13,7 @@ public class Book extends Document {
 
     public Book(String title, int value, Collection<Author> authors, Collection<Keyword> keywords, Boolean isReference,
                 Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition, int editionYear) {
-        super(title, value, authors, keywords);
+        super("book", title, value, authors, keywords);
         this.isReference = isReference;
         this.isBestseller = isBestseller;
         this.publisher = publisher;
@@ -39,7 +39,7 @@ public class Book extends Document {
     public Book(int id, String title, int value, Collection<Author> authors, Collection<Keyword> keywords,
                 Boolean isReference, Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition,
                 int editionYear) {
-        super(id, title, value, authors, keywords);
+        super(id, "book", title, value, authors, keywords);
         this.isReference = isReference;
         this.isBestseller = isBestseller;
         this.publisher = publisher;
@@ -70,29 +70,5 @@ public class Book extends Document {
 
     public LocalDate getDateOfPublishing() {
         return dateOfPublishing;
-    }
-
-    public void setBestseller(Boolean bestSeller) {
-        isBestseller = bestSeller;
-    }
-
-    public void setDateOfPublishing(LocalDate dateOfPublishing) {
-        this.dateOfPublishing = dateOfPublishing;
-    }
-
-    public void setEdition(int edition) {
-        this.edition = edition;
-    }
-
-    public void setEditionYear(int editionYear) {
-        this.editionYear = editionYear;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = publisher;
-    }
-
-    public void setReference(Boolean reference) {
-        isReference = reference;
     }
 }
