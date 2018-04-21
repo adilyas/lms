@@ -29,13 +29,13 @@ public class AVMaterialDAO {
     }
 
     static void delete(AVMaterial avMaterial) throws SQLException {
-        DocumentDAO.delete(avMaterial);
-
         String query = "DELETE FROM av_materials WHERE document_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, avMaterial.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        DocumentDAO.delete(avMaterial);
     }
 
     static Book get(int id) throws SQLException {

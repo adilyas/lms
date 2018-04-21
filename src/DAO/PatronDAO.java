@@ -29,19 +29,19 @@ public class PatronDAO {
     }
 
     static void delete(Patron patron) throws SQLException {
-        UserDAO.delete(patron);
-
-        String query = "DELETE FROM patrons WHERE person_id = ?;";
+        String query = "DELETE FROM patron_booked_document WHERE person_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
         db.getConnection().commit();
 
-        query = "DELETE FROM patron_booked_document WHERE person_id = ?;";
+        query = "DELETE FROM patrons WHERE person_id = ?;";
         st = db.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        UserDAO.delete(patron);
     }
 
     static Patron get(int id) throws SQLException {
@@ -67,7 +67,7 @@ public class PatronDAO {
         rs = st.executeQuery();
         db.getConnection().commit();
         while (rs.next())
-            patron.getWaitingList().add(CoolDocumentDAO.get(id));
+            patron.getWaitingList().add(CoolDocumentDAO.get(rs.getInt("id")));
 
         query = "SELECT id FROM copies WHERE holder_id = ?";
         st = db.getConnection().prepareStatement(query);
@@ -75,7 +75,7 @@ public class PatronDAO {
         rs = st.executeQuery();
         db.getConnection().commit();
         while (rs.next())
-            patron.getWaitingList().add(CopyDAO.get(id));
+            patron.getCheckedOutCopies().add(CopyDAO.get(rs.getInt("id")));
 
         return patron;
     }

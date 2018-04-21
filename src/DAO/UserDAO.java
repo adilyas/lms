@@ -32,13 +32,13 @@ public class UserDAO {
     }
 
     static void delete(User user) throws SQLException {
-        PersonDAO.delete(user);
-
         String query = "DELETE FROM users WHERE person_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, user.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        PersonDAO.delete(user);
     }
 
     static User get(int id) throws SQLException {
