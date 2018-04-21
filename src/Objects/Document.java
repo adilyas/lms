@@ -1,5 +1,6 @@
 package Objects;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Document {
@@ -9,21 +10,25 @@ public class Document {
     private int value;
     private Collection<Author> authors;
     private Collection<Keyword> keywords;
-    public Document(String type, String title, int value, Collection<Author> authors, Collection<Keyword> keywords) {
+    private Collection<Patron> bookedBy;
+
+    public Document(String type, String title, int value) {
         this.type = type;
         this.title = title;
         this.value = value;
-        this.authors = authors;
-        this.keywords = keywords;
+        this.authors = new ArrayList<>();
+        this.keywords = new ArrayList<>();
+        this.bookedBy = new ArrayList<>();
     }
 
-    public Document(int id, String type, String title, int value, Collection<Author> authors, Collection<Keyword> keywords) {
+    public Document(int id, String type, String title, int value) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.value = value;
-        this.authors = authors;
-        this.keywords = keywords;
+        this.authors = new ArrayList<>();
+        this.keywords = new ArrayList<>();
+        this.bookedBy = new ArrayList<>();
     }
 
     public String getType() {
@@ -50,9 +55,12 @@ public class Document {
         return authors;
     }
 
-
     public Collection<Keyword> getKeywords() {
         return keywords;
+    }
+
+    public Collection<Patron> getBookedBy() {
+        return bookedBy;
     }
 
 }

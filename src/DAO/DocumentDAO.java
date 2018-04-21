@@ -80,7 +80,7 @@ public class DocumentDAO {
         if (!rs.next())
             throw new NoSuchElementException();
         Document result = new Document(rs.getInt("id"), rs.getString("type"), rs.getString("title"),
-                rs.getInt("value"), new ArrayList<Author>(), new ArrayList<Keyword>());
+                rs.getInt("value"));
 
         query = "SELECT id, word FROM keywords JOIN document_has_keyword ON keyword_id = id WHERE document_id = ?";
         st = db.getConnection().prepareStatement(query);
@@ -99,6 +99,16 @@ public class DocumentDAO {
         while (rs.next())
             result.getAuthors().add(new Author(rs.getInt("id"), rs.getString("name"),
                     rs.getString("surname")));
+
+        query = "SELECT p.id FROM persons p JOIN patron_booked_document pd ON p.id = pd.person_id " +
+                "JOIN documents d ON d.id = pd.document_id WHERE document_id = ?" +
+                "ORDER BY priority, date ASC;";
+        st = db.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+        db.getConnection().commit();
+        while (rs.next())
+            result.getBookedBy().add(PatronDAO.get(rs.getInt("id")));
 
         return result;
     }
