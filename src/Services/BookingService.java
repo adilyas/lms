@@ -7,6 +7,7 @@ import Objects.*;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
@@ -76,11 +77,44 @@ public class BookingService {
      */
     public static void checkOut(Patron patron, Librarian librarian, Copy copy) throws SQLException {
         String updateText = "update copies set is_checked_out = ?, " +
-                "holder_id = ?, renew_times = renew_times + 1, check_out_date = ?, due_date = ? where id = ?;";
+                "holder_id = ?, renew_times = renew_times + 1, check_out_date = ?, " +
+                "due_date = ? where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(updateText);
 
+        int dueWeeks = calcDueWeeks(patron, copy);
         LocalDate currentDate = LocalDate.now();
+        LocalDate dueDate = currentDate.plusWeeks(dueWeeks);
 
+        st.setInt(1, 1);
+        st.setInt(2, patron.getId());
+        st.setDate(3, Date.valueOf(currentDate));
+        st.setDate(4, Date.valueOf(dueDate));
+        st.executeUpdate();
+        db.getConnection().commit();
+    }
+
+    public static void renew(Patron patron, Librarian librarian, Copy copy) throws SQLException {
+        if (isOutstandingReques(copy.getDocument())) {
+            return; // may be it's better to write some feedback here
+        }
+        if (copy.getRenewTimes() > 1 && !patron.getType().equals("VP")) {
+            return; // may be it's better to write some feedback here
+        }
+
+        String updateText = "update copies set renew_times = renew_times + 1, check_out_date = ?, due_date = ?;";
+        PreparedStatement st = db.getConnection().prepareStatement(updateText);
+
+        int dueWeeks = calcDueWeeks(patron, copy);
+        LocalDate newCheckOutDate = copy.getDueDate();
+        LocalDate newDueDate = newCheckOutDate.plusWeeks(dueWeeks);
+
+        st.setDate(1, Date.valueOf(newCheckOutDate));
+        st.setDate(2, Date.valueOf(newDueDate));
+        st.executeUpdate();
+        db.getConnection().commit();
+    }
+
+    private static int calcDueWeeks(Patron patron, Copy copy) {
         int dueWeeks = 3;
         String docType = copy.getDocument().getType();
         if (patron.getType().equals("VP")) {
@@ -97,13 +131,15 @@ public class BookingService {
             dueWeeks = 2;
         }
 
-        LocalDate dueDate = currentDate.plusWeeks(dueWeeks);
+        return dueWeeks;
+    }
 
-        st.setInt(1, 1);
-        st.setInt(2, patron.getId());
-        st.setDate(3, Date.valueOf(currentDate));
-        st.setDate(4, Date.valueOf(dueDate));
-        st.executeUpdate();
-        db.getConnection().commit();
+    private static Boolean isOutstandingReques(Document document) throws SQLException {
+        // I've made it in a naive way, but it's easy to fix
+        String queryText = "select count(*) from patron_booked_document " +
+                "where document_id = ?;";
+        PreparedStatement st = db.getConnection().prepareStatement(queryText);
+        ResultSet rs = st.executeQuery();
+        return rs.next();
     }
 }
