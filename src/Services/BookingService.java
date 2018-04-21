@@ -4,6 +4,7 @@ import DAO.LibrarianDAO;
 import DAO.PatronDAO;
 import Database.Database;
 import Objects.*;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -76,6 +77,9 @@ public class BookingService {
      * @throws SQLException
      */
     public static void checkOut(Patron patron, Librarian librarian, Copy copy) throws SQLException {
+        if (!isAvailable(copy.getDocument())) {
+            return; // may be it's better to write some feedback here
+        }
         String updateText = "update copies set is_checked_out = ?, " +
                 "holder_id = ?, renew_times = renew_times + 1, check_out_date = ?, " +
                 "due_date = ? where id = ?;";
@@ -93,8 +97,16 @@ public class BookingService {
         db.getConnection().commit();
     }
 
-    public static void renew(Patron patron, Librarian librarian, Copy copy) throws SQLException {
-        if (isOutstandingReques(copy.getDocument())) {
+    /**
+     * Renews patron checked out copy relation considering
+     * required conditions. Updates appropriate fields in the database.
+     *
+     * @param patron patron who wants to renew
+     * @param copy copy which is going to be renewed
+     * @throws SQLException
+     */
+    public static void renew(Patron patron, Copy copy) throws SQLException {
+        if (isOutstandingRequest(copy.getDocument())) {
             return; // may be it's better to write some feedback here
         }
         if (copy.getRenewTimes() > 1 && !patron.getType().equals("VP")) {
@@ -134,12 +146,23 @@ public class BookingService {
         return dueWeeks;
     }
 
-    private static Boolean isOutstandingReques(Document document) throws SQLException {
+    private static Boolean isOutstandingRequest(Document document) throws SQLException {
         // I've made it in a naive way, but it's easy to fix
         String queryText = "select count(*) from patron_booked_document " +
                 "where document_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(queryText);
         ResultSet rs = st.executeQuery();
-        return rs.next();
+        rs.next();
+        return rs.getInt("count(*)") > 0;
+    }
+
+    private static Boolean isAvailable(Document document) throws SQLException {
+        String queryText = "select count(*) from copies where document_id = ? " +
+                "and is_checked_out = 0";
+        PreparedStatement st = db.getConnection().prepareStatement(queryText);
+        st.setInt(1, document.getId());
+        ResultSet rs = st.executeQuery();
+        rs.next();
+        return rs.getInt("count(*)") > 0;
     }
 }
