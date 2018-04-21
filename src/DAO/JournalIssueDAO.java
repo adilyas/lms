@@ -33,13 +33,13 @@ public class JournalIssueDAO {
     }
 
     static void delete(JournalIssue journalIssue) throws SQLException {
-        DocumentDAO.delete(journalIssue);
-
         String query = "DELETE FROM journal_issues WHERE id = ?";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, journalIssue.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        DocumentDAO.delete(journalIssue);
     }
 
     static JournalIssue get(int id) throws SQLException {

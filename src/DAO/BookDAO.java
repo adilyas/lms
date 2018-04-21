@@ -37,13 +37,13 @@ public final class BookDAO {
     }
 
     static void delete(Book book) throws SQLException {
-        DocumentDAO.delete(book);
-
         String query = "DELETE FROM books WHERE document_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, book.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        DocumentDAO.delete(book);
     }
 
     static Book get(int id) throws SQLException {

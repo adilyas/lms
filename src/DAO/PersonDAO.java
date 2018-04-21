@@ -56,7 +56,7 @@ public class PersonDAO {
 
     static void update(Person person) throws SQLException {
         String query = "UPDATE persons set " +
-                "name = ?" +
+                "name = ?, " +
                 "suname = ? WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setString(1, person.getName());

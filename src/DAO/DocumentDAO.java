@@ -52,19 +52,19 @@ public class DocumentDAO {
     }
 
     static void delete(Document document) throws SQLException {
-        String query = "DELETE FROM documents WHERE id = ?";
+        String query = "DELETE FROM author_of_document WHERE document_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
         db.getConnection().commit();
 
-        query = "DELETE FROM author_of_document WHERE document_id = ?;";
+        query = "DELETE FROM document_has_keyword WHERE document_id = ?;";
         st = db.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
         db.getConnection().commit();
 
-        query = "DELETE FROM document_has_keyword WHERE document_id = ?;";
+        query = "DELETE FROM documents WHERE id = ?";
         st = db.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();

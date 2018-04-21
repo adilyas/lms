@@ -3,7 +3,6 @@ package DAO;
 import Database.Database;
 import Objects.Librarian;
 import Objects.Person;
-import Objects.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,13 +29,13 @@ public class LibrarianDAO {
     }
 
     static void delete(Librarian librarian) throws SQLException {
-        PersonDAO.delete(librarian);
-
         String query = "DELETE FROM librarians WHERE person_id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        PersonDAO.delete(librarian);
     }
 
     static Librarian get(int id) throws SQLException {

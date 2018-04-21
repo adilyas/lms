@@ -3,7 +3,6 @@ package DAO;
 import Database.Database;
 import Objects.Author;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,7 +17,7 @@ public class AuthorDAO {
     }
 
     static Author get(int id) throws SQLException {
-        String query = "select * from persons join authors on persons.id = authors.person_id where id = ?;";
+        String query = "SELECT * FROM persons JOIN authors ON persons.id = authors.person_id WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
@@ -31,7 +30,7 @@ public class AuthorDAO {
     }
 
     static Author getByName(Author author) throws SQLException {
-        String query = "select * from persons join authors on persons.id = authors.person_id where name = ? and surname = ?;";
+        String query = "SELECT * FROM persons JOIN authors ON persons.id = authors.person_id WHERE name = ? AND surname = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setString(1, author.getName());
         st.setString(2, author.getSurname());
@@ -47,8 +46,8 @@ public class AuthorDAO {
 
     static void insert(Author author) throws SQLException {
         PersonDAO.insert(author);
-        String query = "insert into authors (id) " +
-                "values (?);";
+        String query = "INSERT INTO authors (id) " +
+                "VALUES (?);";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, author.getId());
         st.executeUpdate();
@@ -60,11 +59,12 @@ public class AuthorDAO {
     }
 
     static void delete(Author author) throws SQLException {
-        PersonDAO.delete(author);
-        String docAddQuery = "delete from authors where id = ?;";
+        String docAddQuery = "DELETE FROM authors WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(docAddQuery);
         st.setInt(1, author.getId());
         st.executeUpdate();
         db.getConnection().commit();
+
+        PersonDAO.delete(author);
     }
 }
