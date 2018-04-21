@@ -1,65 +1,32 @@
 package Objects;
 
 public class User extends Person {
+    private String type;
     private String phoneNumber;
-    String type;
-
-    public User(String name, String surname, String phoneNumber, String type) {
-        super(name, surname, type);
-        this.phoneNumber = phoneNumber;
+    private String address;
+    public User(String name, String surname, String type, String phoneNumber, String address) {
+        super(name, surname);
         this.type = type;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
-    public User(int id, String name, String surname,
-                String phoneNumber, String type) {
-        super(id, name, surname, type);
-        this.phoneNumber = phoneNumber;
+    public User(int id, String name, String surname, String type, String phoneNumber, String address) {
+        super(id, name, surname);
         this.type = type;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
     }
 
     public String getType() {
         return type;
     }
 
-    @Override
-    public int getId() {
-        return super.getId();
+    public String getAddress() {
+        return address;
     }
 
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
-    @Override
-    public String getSurname() {
-        return super.getSurname();
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    @Override
-    public void setId(int id) {
-        super.setId(id);
-    }
-
-    @Override
-    public void setName(String name) {
-        super.setName(name);
-    }
-
-    @Override
-    public void setSurname(String surname) {
-        super.setSurname(surname);
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }

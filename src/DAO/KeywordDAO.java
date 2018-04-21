@@ -15,10 +15,10 @@ public class KeywordDAO {
         db = dbb;
     }
 
-    static Keyword get(int ID) throws SQLException {
+    static Keyword get(int id) throws SQLException {
         String query = "select * from keywords where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setInt(1, ID);
+        st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
@@ -52,7 +52,7 @@ public class KeywordDAO {
     }
 
     static void update(Keyword keyword) throws SQLException {
-        String query = "update keywords set" +
+        String query = "update keywords set " +
                 "word = ? " +
                 "where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);

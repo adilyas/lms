@@ -16,10 +16,10 @@ public class PersonDAO {
         db = dbb;
     }
 
-    static Person get(int ID) throws SQLException {
-        String query = "select * from persons where id = ?;";
+    static Person get(int id) throws SQLException {
+        String query = "SELECT * FROM persons WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setInt(1, ID);
+        st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
@@ -30,7 +30,7 @@ public class PersonDAO {
     }
 
     static Person getByName(Person person) throws SQLException {
-        String query = "select * from persons where name = ? and surname = ?;";
+        String query = "SELECT * FROM persons WHERE name = ? AND surname = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setString(1, person.getName());
         st.setString(2, person.getSurname());
@@ -44,8 +44,8 @@ public class PersonDAO {
     }
 
     static void insert(Person person) throws SQLException {
-        String query = "insert into persons (name, surname) " +
-                "values (?, ?);";
+        String query = "INSERT INTO persons (name, surname) " +
+                "VALUES (?, ?);";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setString(1, person.getName());
         st.setString(2, person.getSurname());
@@ -55,9 +55,9 @@ public class PersonDAO {
     }
 
     static void update(Person person) throws SQLException {
-        String query = "update persons set" +
+        String query = "UPDATE persons set " +
                 "name = ?" +
-                "suname = ? where id = ?;";
+                "suname = ? WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setString(1, person.getName());
         st.setString(2, person.getSurname());
@@ -67,7 +67,7 @@ public class PersonDAO {
     }
 
     static void delete(Person person) throws SQLException {
-        String query = "delete from persons where id = ?;";
+        String query = "DELETE FROM persons WHERE id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         st.setInt(1, person.getId());
         st.executeUpdate();
@@ -75,7 +75,7 @@ public class PersonDAO {
     }
 
     static int getLastId() throws SQLException {
-        String query = "select LAST_INSERT_ID() from persons;";
+        String query = "SELECT LAST_INSERT_ID() FROM persons;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
         ResultSet rs = st.executeQuery();
         rs.next();

@@ -17,10 +17,10 @@ public class AuthorDAO {
         db = dbb;
     }
 
-    static Author get(int ID) throws SQLException {
+    static Author get(int id) throws SQLException {
         String query = "select * from persons join authors on persons.id = authors.person_id where id = ?;";
         PreparedStatement st = db.getConnection().prepareStatement(query);
-        st.setInt(1, ID);
+        st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         db.getConnection().commit();
         if (rs.next()) {
