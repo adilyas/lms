@@ -11,7 +11,19 @@ public class CoolUserDAO {
 
     static void insert(User user) throws SQLException {
         switch (user.getType()) {
-            case "patron":
+            case "student":
+                PatronDAO.insert((Patron) user);
+                break;
+            case "instructor":
+                PatronDAO.insert((Patron) user);
+                break;
+            case "professor":
+                PatronDAO.insert((Patron) user);
+                break;
+            case "TA":
+                PatronDAO.insert((Patron) user);
+                break;
+            case "VP":
                 PatronDAO.insert((Patron) user);
                 break;
             case "librarian1":
@@ -30,7 +42,19 @@ public class CoolUserDAO {
 
     static void delete(User user) throws SQLException {
         switch (user.getType()) {
-            case "patron":
+            case "student":
+                PatronDAO.delete((Patron) user);
+                break;
+            case "instructor":
+                PatronDAO.delete((Patron) user);
+                break;
+            case "professor":
+                PatronDAO.delete((Patron) user);
+                break;
+            case "TA":
+                PatronDAO.delete((Patron) user);
+                break;
+            case "VP":
                 PatronDAO.delete((Patron) user);
                 break;
             case "librarian1":
@@ -51,7 +75,15 @@ public class CoolUserDAO {
         User user = UserDAO.get(id);
 
         switch (user.getType()) {
-            case "patron":
+            case "student":
+                return PatronDAO.get(id);
+            case "instructor":
+                return PatronDAO.get(id);
+            case "professor":
+                return PatronDAO.get(id);
+            case "TA":
+                return PatronDAO.get(id);
+            case "VP":
                 return PatronDAO.get(id);
             case "librarian1":
                 return LibrarianDAO.get(id);
@@ -66,7 +98,19 @@ public class CoolUserDAO {
 
     static void update(User user) throws SQLException {
         switch (user.getType()) {
-            case "patron":
+            case "student":
+                PatronDAO.update((Patron) user);
+                break;
+            case "instructor":
+                PatronDAO.update((Patron) user);
+                break;
+            case "professor":
+                PatronDAO.update((Patron) user);
+                break;
+            case "TA":
+                PatronDAO.update((Patron) user);
+                break;
+            case "VP":
                 PatronDAO.update((Patron) user);
                 break;
             case "librarian1":
