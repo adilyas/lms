@@ -7,30 +7,10 @@ public class Copy {
     private Document document;
     private Patron holder;
     private boolean isCheckedOut;
-
-    public void setHolder(Patron holder) {
-        this.holder = holder;
-    }
-
-    public void setCheckedOut(boolean checkedOut) {
-        isCheckedOut = checkedOut;
-    }
-
-    public void setRenewTimes(int renewTimes) {
-        this.renewTimes = renewTimes;
-    }
-
-    public void setCheckedOutDate(LocalDate checkedOutDate) {
-        CheckedOutDate = checkedOutDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        DueDate = dueDate;
-    }
-
     private int renewTimes;
     private LocalDate CheckedOutDate;
     private LocalDate DueDate;
+
     public Copy(Document document) {
         this.document = document;
         this.holder = null;
@@ -63,8 +43,16 @@ public class Copy {
         return holder;
     }
 
+    public void setHolder(Patron holder) {
+        this.holder = holder;
+    }
+
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Document getDocument() {
@@ -75,19 +63,31 @@ public class Copy {
         return isCheckedOut;
     }
 
+    public void setCheckedOut(boolean checkedOut) {
+        isCheckedOut = checkedOut;
+    }
+
     public int getRenewTimes() {
         return renewTimes;
+    }
+
+    public void setRenewTimes(int renewTimes) {
+        this.renewTimes = renewTimes;
     }
 
     public LocalDate getCheckedOutDate() {
         return CheckedOutDate;
     }
 
+    public void setCheckedOutDate(LocalDate checkedOutDate) {
+        CheckedOutDate = checkedOutDate;
+    }
+
     public LocalDate getDueDate() {
         return DueDate;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDueDate(LocalDate dueDate) {
+        DueDate = dueDate;
     }
 }
