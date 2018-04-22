@@ -10,8 +10,8 @@ import java.sql.SQLException;
 public class ReturnService {
     static private Database db;
 
-    static void setDb(Database dbb) {
-        db = dbb;
+    static void setDb(Database database) {
+        db = database;
     }
 
     /**

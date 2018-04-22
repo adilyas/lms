@@ -12,28 +12,28 @@ import java.util.NoSuchElementException;
 
 public class AVMaterialDAO {
 
-    static private Database db;
+    static private Database database;
 
-    static void setDb(Database dbb) {
-        db = dbb;
+    static void setDatabase(Database database) {
+        AVMaterialDAO.database = database;
     }
 
     static void insert(AVMaterial avMaterial) throws SQLException {
         DocumentDAO.insert(avMaterial);
 
         String query = "INSERT INTO av_materials (document_id) VALUES (?);";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, avMaterial.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
     }
 
     static void delete(AVMaterial avMaterial) throws SQLException {
         String query = "DELETE FROM av_materials WHERE document_id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, avMaterial.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
 
         DocumentDAO.delete(avMaterial);
     }
@@ -42,7 +42,7 @@ public class AVMaterialDAO {
         Document document = DocumentDAO.get(id);
 
         String query = "SELECT 1 FROM av_materials WHERE document_id = ?";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next())

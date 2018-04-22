@@ -11,10 +11,10 @@ import java.util.NoSuchElementException;
 
 public class LibrarianDAO {
 
-    static private Database db;
+    static private Database database;
 
-    static void setDb(Database dbb) {
-        db = dbb;
+    static void setDatabase(Database database) {
+        LibrarianDAO.database = database;
     }
 
     static void insert(Librarian librarian) throws SQLException {
@@ -22,18 +22,18 @@ public class LibrarianDAO {
 
         String query = "INSERT INTO librarians (person_id) " +
                 "VALUES (?);";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
     }
 
     static void delete(Librarian librarian) throws SQLException {
         String query = "DELETE FROM librarians WHERE person_id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
 
         PersonDAO.delete(librarian);
     }
@@ -42,10 +42,10 @@ public class LibrarianDAO {
         Person person = PersonDAO.get(id);
 
         String query = "SELECT 1 FROM librarians WHERE person_id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        db.getConnection().commit();
+        database.getConnection().commit();
         if (rs.next()) {
             return (Librarian) person;
         } else {

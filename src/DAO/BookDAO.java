@@ -12,10 +12,10 @@ import java.util.NoSuchElementException;
 
 public final class BookDAO {
 
-    static private Database db;
+    static private Database database;
 
-    static void setDb(Database dbb) {
-        db = dbb;
+    static void setDatabase(Database database) {
+        BookDAO.database = database;
     }
 
     static void insert(Book book) throws SQLException {
@@ -24,7 +24,7 @@ public final class BookDAO {
         String query = "INSERT INTO books (document_id, is_reference, is_bestseller, publisher, date_of_publishing, " +
                 "edition, edition_year) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?);";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, book.getId());
         st.setBoolean(2, book.getBestseller());
         st.setBoolean(3, book.getReference());
@@ -33,15 +33,15 @@ public final class BookDAO {
         st.setInt(6, book.getEdition());
         st.setInt(7, book.getEditionYear());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
     }
 
     static void delete(Book book) throws SQLException {
         String query = "DELETE FROM books WHERE document_id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, book.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
 
         DocumentDAO.delete(book);
     }
@@ -50,7 +50,7 @@ public final class BookDAO {
         Document document = DocumentDAO.get(id);
 
         String query = "SELECT * FROM books WHERE document_id = ?";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next())
@@ -68,7 +68,7 @@ public final class BookDAO {
 
         String query = "UPDATE books SET is_reference = ?, is_bestseller = ?, publisher = ?, date_of_publishing = ?, " +
                 "edition = ?, edition_year = ? WHERE id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setBoolean(1, book.getReference());
         st.setBoolean(2, book.getBestseller());
         st.setString(3, book.getPublisher());
@@ -77,6 +77,6 @@ public final class BookDAO {
         st.setInt(6, book.getEditionYear());
         st.setInt(7, book.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
     }
 }

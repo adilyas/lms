@@ -10,18 +10,18 @@ import java.util.NoSuchElementException;
 
 public class AuthorDAO {
 
-    static private Database db;
+    static private Database database;
 
-    static void setConnection(Database dbb) {
-        db = dbb;
+    static void setDatabase(Database database) {
+        AuthorDAO.database = database;
     }
 
     static Author get(int id) throws SQLException {
         String query = "SELECT * FROM persons JOIN authors ON persons.id = authors.person_id WHERE id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        db.getConnection().commit();
+        database.getConnection().commit();
         if (rs.next()) {
             return new Author(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -31,11 +31,11 @@ public class AuthorDAO {
 
     static Author getByName(Author author) throws SQLException {
         String query = "SELECT * FROM persons JOIN authors ON persons.id = authors.person_id WHERE name = ? AND surname = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setString(1, author.getName());
         st.setString(2, author.getSurname());
         ResultSet rs = st.executeQuery();
-        db.getConnection().commit();
+        database.getConnection().commit();
         if (rs.next()) {
             return new Author(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -48,10 +48,10 @@ public class AuthorDAO {
         PersonDAO.insert(author);
         String query = "INSERT INTO authors (id) " +
                 "VALUES (?);";
-        PreparedStatement st = db.getConnection().prepareStatement(query);
+        PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, author.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
     }
 
     static void update(Author author) throws SQLException {
@@ -60,10 +60,10 @@ public class AuthorDAO {
 
     static void delete(Author author) throws SQLException {
         String docAddQuery = "DELETE FROM authors WHERE id = ?;";
-        PreparedStatement st = db.getConnection().prepareStatement(docAddQuery);
+        PreparedStatement st = database.getConnection().prepareStatement(docAddQuery);
         st.setInt(1, author.getId());
         st.executeUpdate();
-        db.getConnection().commit();
+        database.getConnection().commit();
 
         PersonDAO.delete(author);
     }
