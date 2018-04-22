@@ -7,6 +7,27 @@ public class Copy {
     private Document document;
     private Patron holder;
     private boolean isCheckedOut;
+
+    public void setHolder(Patron holder) {
+        this.holder = holder;
+    }
+
+    public void setCheckedOut(boolean checkedOut) {
+        isCheckedOut = checkedOut;
+    }
+
+    public void setRenewTimes(int renewTimes) {
+        this.renewTimes = renewTimes;
+    }
+
+    public void setCheckedOutDate(LocalDate checkedOutDate) {
+        CheckedOutDate = checkedOutDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        DueDate = dueDate;
+    }
+
     private int renewTimes;
     private LocalDate CheckedOutDate;
     private LocalDate DueDate;

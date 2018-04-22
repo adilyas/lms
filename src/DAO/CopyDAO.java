@@ -54,7 +54,7 @@ public class CopyDAO {
                 rs.getDate("due_date").toLocalDate());
     }
 
-    static void update(Copy copy) throws SQLException {
+    public static void update(Copy copy) throws SQLException {
         String query = "UPDATE copies SET document_id = ?, is_checked_out = ?, holder_id = ?, renew_times = ?, " +
                 "check_out_date = ?, due_date = ? WHERE id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);

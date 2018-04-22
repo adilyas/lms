@@ -1,5 +1,6 @@
 package Services;
 
+import DAO.CopyDAO;
 import Database.Database;
 import Objects.*;
 
@@ -86,28 +87,35 @@ public class BookingService {
      * @param patron    checking out patron
      * @param librarian librarian who has
      *                  let patron to check out the document
-     * @param copy      particular copy the patring is checking out
+     * @param document  particular document the patron is checking out
      * @throws SQLException
      */
-    public static void checkOut(Patron patron, Librarian librarian, Copy copy) throws SQLException {
-        if (!isAvailable(copy.getDocument())) {
-            return; // may be it's better to write some feedback here
+    public static void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException {
+        Copy copy = document.getFreeCopy();
+        if(copy == null){
+            loggingService.logString("CHECKOUT\n" +
+                    "BY " + patron + "\n" +
+                    "VERIFIED BY " + librarian + "\n"
+                    "DOCUMENT " + document + "\n" +
+                    "RESULT " + "No free copy available.");
+            throw new NoSuchElementException("No free copy available.");
         }
-        String updateText = "UPDATE copies SET is_checked_out = ?, " +
-                "holder_id = ?, renew_times = renew_times + 1, check_out_date = ?, " +
-                "due_date = ? WHERE id = ?;";
-        PreparedStatement st = database.getConnection().prepareStatement(updateText);
-
         int dueWeeks = calcDueWeeks(patron, copy);
         LocalDate currentDate = LocalDate.now();
         LocalDate dueDate = currentDate.plusWeeks(dueWeeks);
 
-        st.setInt(1, 1);
-        st.setInt(2, patron.getId());
-        st.setDate(3, Date.valueOf(currentDate));
-        st.setDate(4, Date.valueOf(dueDate));
-        st.executeUpdate();
-        database.getConnection().commit();
+        copy.setCheckedOut(true);
+        copy.setHolder(patron);
+        copy.setCheckedOutDate(LocalDate.now());
+        copy.setDueDate(LocalDate.now().plusWeeks(calcDueWeeks(patron, copy)));
+
+
+        loggingService.logString("CHECKOUT\n" +
+                        "BY " + patron + "\n" +
+                        "VERIFIED BY " + librarian + "\n"
+                        "DOCUMENT " + document + "\n" +
+                        "RESULT " + "Checked out on " + copy.getCheckedOutDate() + " until " + copy.getDueDate() + ".");
+        CopyDAO.update(copy);
     }
 
     /**
@@ -158,15 +166,5 @@ public class BookingService {
 
     public static void outstandingRequest(Librarian librarian, Document document) {
 
-    }
-
-    private static Boolean isAvailable(Document document) throws SQLException {
-        String queryText = "SELECT count(*) FROM copies WHERE document_id = ? " +
-                "AND is_checked_out = 0";
-        PreparedStatement st = database.getConnection().prepareStatement(queryText);
-        st.setInt(1, document.getId());
-        ResultSet rs = st.executeQuery();
-        rs.next();
-        return rs.getInt("count(*)") > 0;
     }
 }
