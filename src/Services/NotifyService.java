@@ -95,7 +95,7 @@ public class NotifyService {
             // To get the array of addresses
             int i = 0;
             for(User recipientUser:to) {
-                toAddress[i] = new InternetAddress(recipientUser.getMailAddress());
+                toAddress[i] = new InternetAddress(recipientUser.getEmail());
                 i++;
             }
 
