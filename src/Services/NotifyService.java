@@ -90,7 +90,7 @@ public class NotifyService {
         }
     }
 
-    public <T extends User> void notify(T receiver, String message) {
+    public void notify(User receiver, String message) {
         System.out.println("NOTIFICATION FOR:");
         System.out.println(receiver);
         System.out.println("TEXT:");
