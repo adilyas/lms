@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -35,6 +36,8 @@ public class BookingService {
         BookingService.notifyService = notifyService;
     }
 
+
+
     /**
      * Implements document booking logic.
      * Depending on user type sets the priority of the user in the order.
@@ -46,7 +49,7 @@ public class BookingService {
     public static void book(Patron patron, Document document) throws SQLException {
         loggingService.logString("BOOK START\n" +
                 "BY " + patron + "\n" +
-                "DOCUMENT " + document + "\n");
+                "DOCUMENT " + document);
         String query = "INSERT INTO patron_booked_document " +
                 "(person_id, document_id, priority, request_date) VALUES (?, ?, ?, ?);";
         PreparedStatement statement = database.getConnection().prepareStatement(query);
@@ -101,6 +104,8 @@ public class BookingService {
     }
 
 
+
+
     /**
      * Implements checking out logic.
      * Depending on user type and document type sets dueDate.
@@ -115,16 +120,28 @@ public class BookingService {
         loggingService.logString("CHECKOUT START\n" +
                 "BY " + patron + "\n" +
                 "VERIFIED BY " + librarian + "\n" +
-                "DOCUMENT " + document + "\n");
+                "DOCUMENT " + document);
+        if(document.isOutstandingRequest()){
+            loggingService.logString("CHECKOUT FINISH\n" +
+                    "RESULT " + "Can't check out this document because of outstanding request.");
+            throw new NoSuchElementException("Can't check out this document because of outstanding request.");
+        }
+        if(!patron.getWaitingList().contains(document)){
+            loggingService.logString("CHECKOUT FINISH\n" +
+                    "RESULT " + "This patron did't book this document.");
+            throw new NoSuchElementException("This patron did't book this document.");
+        }
+        if(document.quantityOfFreeCopies() <= ((ArrayList) document.getBookedBy()).indexOf(patron)){
+            loggingService.logString("CHECKOUT FINISH\n" +
+                    "RESULT " + "This patron can't take this document due to his place in queue.");
+            throw new NoSuchElementException("This patron can't take this document due to his place in queue.");
+        }
         Copy copy = document.getFreeCopy();
         if (copy == null) {
             loggingService.logString("CHECKOUT FINISH\n" +
                     "RESULT " + "No free copy available.");
             throw new NoSuchElementException("No free copy available.");
         }
-        int dueWeeks = calcDueWeeks(patron, copy);
-        LocalDate currentDate = LocalDate.now();
-        LocalDate dueDate = currentDate.plusWeeks(dueWeeks);
 
         copy.setCheckedOut(true);
         copy.setHolder(patron);
@@ -136,6 +153,9 @@ public class BookingService {
                 "RESULT " + "Checked out on " + copy.getCheckedOutDate() + " until " + copy.getDueDate() + ".");
     }
 
+
+
+
     /**
      * Renews patron checked out copy relation considering
      * required conditions. Updates appropriate fields in the database.
@@ -145,21 +165,24 @@ public class BookingService {
      * @throws SQLException
      */
     public static void renew(Patron patron, Copy copy) throws SQLException {
-        if (copy.getRenewTimes() > 1 && !patron.getType().equals("VP")) {
-            return; // may be it's better to write some feedback here
+        loggingService.logString("RENEW START\n" +
+            "BY " + patron + "\n" +
+            "COPY " + copy);
+
+        if (copy.getRenewTimes() > 1 && !patron.getType().equals("VP") || copy.getDocument().isOutstandingRequest()) {
+            loggingService.logString("RENEW FINISH\n" +
+                    "RESULT " + "This patron can't renew this document anymore.");
+            throw new IllegalArgumentException("This patron can't renew this document anymore.");
         }
 
-        String updateText = "UPDATE copies SET renew_times = renew_times + 1, check_out_date = ?, due_date = ?;";
-        PreparedStatement st = database.getConnection().prepareStatement(updateText);
+        copy.setRenewTimes(copy.getRenewTimes() + 1);
+        copy.setCheckedOutDate(LocalDate.now());
+        copy.setDueDate(LocalDate.now().plusWeeks(calcDueWeeks(patron, copy)));
+        CopyDAO.update(copy);
 
-        int dueWeeks = calcDueWeeks(patron, copy);
-        LocalDate newCheckOutDate = copy.getDueDate();
-        LocalDate newDueDate = newCheckOutDate.plusWeeks(dueWeeks);
+        loggingService.logString("RENEW FINISH\n" +
+                "RESULT " + "Patron renewed this copy.");
 
-        st.setDate(1, Date.valueOf(newCheckOutDate));
-        st.setDate(2, Date.valueOf(newDueDate));
-        st.executeUpdate();
-        database.getConnection().commit();
     }
 
     private static int calcDueWeeks(Patron patron, Copy copy) {
@@ -182,8 +205,19 @@ public class BookingService {
         return dueWeeks;
     }
 
-    public static void outstandingRequest(Librarian librarian, Document document) throws SQLException {
-        loggingService.logString("OUTSTANDING REQUEST START\n" +
+
+
+
+
+    /**
+     * Clean all queue for document, notifies bookers about this, ask checkouters for return, block document from new
+     * booking.
+     * @param librarian
+     * @param document
+     * @throws SQLException
+     */
+    public static void startOutstandingRequest(Librarian librarian, Document document) throws SQLException {
+        loggingService.logString("START OUTSTANDING REQUEST START\n" +
                 "LIBRARIAN " + librarian + "\n" +
                 "DOCUMENT " + document + "\n");
 
@@ -194,13 +228,31 @@ public class BookingService {
                 .map(Copy::getHolder)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList()), "You should return " + document.getTitle() +
-                " due to outstanding request. Sorry, ask librarian for more details.");
+                " as soon as possible due to outstanding request. Sorry, ask librarian for more details.");
 
         String query = "DELETE FROM patron_booked_document WHERE document_id = ?;";
         PreparedStatement statement = database.getConnection().prepareStatement(query);
         statement.setInt(1, document.getId());
         statement.executeUpdate();
         database.getConnection().commit();
+        document.setOutstandingRequest(true);
+
+        loggingService.logString("START OUTSTANDING REQUEST FINISH\n" +
+                "RESULT Queue for document cleaned, patrons who checked out book notified");
+    }
+
+    /**
+     * Unblock document for booking.
+     * @param librarian
+     * @param document
+     * @throws SQLException
+     */
+    public static void finishOutstandingRequest(Librarian librarian, Document document) throws SQLException {
+        loggingService.logString("OUTSTANDING REQUEST Fi\n" +
+                "LIBRARIAN " + librarian + "\n" +
+                "DOCUMENT " + document + "\n");
+
+        document.setOutstandingRequest(false);
 
         loggingService.logString("OUTSTANDING REQUEST FINISH\n" +
                 "RESULT Queue for document cleaned, patrons who checked out book notified");

@@ -8,42 +8,12 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
 public class NotifyService {
     private static String USER_NAME = "ilyasgm99@gmail.com";  // GMail user name (just the part before "@gmail.com")
     private static String PASSWORD = "2999296029653001"; // GMail password
-
-    /**
-     * Not trully implemented yet.
-     *
-     * @param receivers
-     * @param message
-     */
-    public <T extends User> void notify(Collection<T> receivers, String message) {
-        for (T receiver : receivers) {
-            System.out.println("NOTIFICATION FOR:");
-            System.out.println(receiver);
-            System.out.println("TEXT:");
-            System.out.println(message);
-        }
-    }
-
-
-    public <T extends User> void notify(T receiver, String message) {
-        System.out.println("NOTIFICATION FOR:");
-        System.out.println(receiver);
-        System.out.println("TEXT:");
-        System.out.println(message);
-    }
-
-    public void notifyAboutFreeCopy(Patron patron, Document document) {
-        notify(patron, document.getTitle() + "have copy available for check out. If you will not take it in " +
-                "next two days, you request for this document will be deleted.");
-    }
-
 
     public static void sendMail(Collection<User> recipientUsers, String message) {
         String subject = "Java send mail example";
@@ -54,17 +24,6 @@ public class NotifyService {
 
         sendFromGMail(from, password, recipientUsers, subject, body);
     }
-
-//    this is a toy method made for testing
-//    public static void sendMail(String to, String subject, String body) {
-//        User user = new User("name", "surname", "type", "12345", "address", to);
-//        ArrayList<User> recipientUsers = new ArrayList<>();
-//        recipientUsers.add(user);
-//        String from = USER_NAME;
-//        String password = PASSWORD;
-//
-//        sendFromGMail(from, password, recipientUsers, subject, body);
-//    }
 
     private static void sendFromGMail(String from, String password,
                                       Collection<User> to, String subject,
@@ -94,12 +53,12 @@ public class NotifyService {
 
             // To get the array of addresses
             int i = 0;
-            for(User recipientUser:to) {
+            for (User recipientUser : to) {
                 toAddress[i] = new InternetAddress(recipientUser.getEmail());
                 i++;
             }
 
-            for(i = 0; i < toAddress.length; i++) {
+            for (i = 0; i < toAddress.length; i++) {
                 message.addRecipient(Message.RecipientType.TO, toAddress[i]);
             }
 
@@ -114,6 +73,44 @@ public class NotifyService {
         } catch (MessagingException me) {
             me.printStackTrace();
         }
+    }
+
+    /**
+     * Not trully implemented yet.
+     *
+     * @param receivers
+     * @param message
+     */
+    public <T extends User> void notify(Collection<T> receivers, String message) {
+        for (T receiver : receivers) {
+            System.out.println("NOTIFICATION FOR:");
+            System.out.println(receiver);
+            System.out.println("TEXT:");
+            System.out.println(message);
+        }
+    }
+
+    public <T extends User> void notify(T receiver, String message) {
+        System.out.println("NOTIFICATION FOR:");
+        System.out.println(receiver);
+        System.out.println("TEXT:");
+        System.out.println(message);
+    }
+
+//    this is a toy method made for testing
+//    public static void sendMail(String to, String subject, String body) {
+//        User user = new User("name", "surname", "type", "12345", "address", to);
+//        ArrayList<User> recipientUsers = new ArrayList<>();
+//        recipientUsers.add(user);
+//        String from = USER_NAME;
+//        String password = PASSWORD;
+//
+//        sendFromGMail(from, password, recipientUsers, subject, body);
+//    }
+
+    public void notifyAboutFreeCopy(Patron patron, Document document) {
+        notify(patron, document.getTitle() + "have copy available for check out. If you will not take it in " +
+                "next two days, you request for this document will be deleted.");
     }
 
 }

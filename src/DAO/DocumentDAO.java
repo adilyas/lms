@@ -27,12 +27,13 @@ public class DocumentDAO {
      * @throws SQLException
      */
     static void insert(Document document) throws SQLException {
-        String query = "INSERT INTO documents (type, title, value) " +
-                "VALUES (?, ?, ?);";
+        String query = "INSERT INTO documents (type, title, value, outstanding_request) " +
+                "VALUES (?, ?, ?, ?);";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setString(1, document.getType());
         st.setString(2, document.getTitle());
         st.setInt(3, document.getValue());
+        st.setBoolean(4, document.isOutstandingRequest());
         st.executeUpdate();
         database.getConnection().commit();
         document.setId(getLastId());
@@ -103,7 +104,7 @@ public class DocumentDAO {
         if (!rs.next())
             throw new NoSuchElementException();
         Document result = new Document(rs.getInt("id"), rs.getString("type"), rs.getString("title"),
-                rs.getInt("value"));
+                rs.getInt("value"), rs.getBoolean("outstanding_request"));
 
         query = "SELECT id, word FROM keywords JOIN document_has_keyword ON keyword_id = id WHERE document_id = ?";
         st = database.getConnection().prepareStatement(query);
@@ -154,12 +155,13 @@ public class DocumentDAO {
      * @throws SQLException
      */
     static void update(Document document) throws SQLException {
-        String query = "UPDATE documents SET type = ?, title = ?, value = ? WHERE id = ?;";
+        String query = "UPDATE documents SET type = ?, title = ?, value = ?, outstanding_request = ? WHERE id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setString(1, document.getType());
         st.setString(2, document.getTitle());
         st.setInt(3, document.getValue());
-        st.setInt(4, document.getId());
+        st.setBoolean(4, document.isOutstandingRequest());
+        st.setInt(5, document.getId());
         st.executeUpdate();
         database.getConnection().commit();
 

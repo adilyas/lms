@@ -2,56 +2,48 @@ package Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 public class Document {
     private int id;
     private String type;
     private String title;
     private int value;
+    private boolean outstandingRequest;
     private Collection<Author> authors;
     private Collection<Keyword> keywords;
     private Collection<Patron> bookedBy;
     private Collection<Copy> copies;
 
-    public Document(String type, String title, int value) {
+    public Document(String type, String title, int value, boolean outstandingRequest) {
         this.type = type;
         this.title = title;
         this.value = value;
+        this.outstandingRequest = outstandingRequest;
         this.authors = new ArrayList<>();
         this.keywords = new ArrayList<>();
         this.bookedBy = new ArrayList<>();
         this.copies = new ArrayList<>();
     }
 
-    public Document(String type, String title, int value,
-                    Collection<Author> authors, Collection<Keyword> keywords) {
-        this.type = type;
-        this.title = title;
-        this.value = value;
-        this.authors = new ArrayList<>();
-        this.keywords = new ArrayList<>();
-        this.bookedBy = new ArrayList<>();
-    }
-
-    public Document(int id, String type, String title, int value) {
+    public Document(int id, String type, String title, int value, boolean outstandingRequest) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.value = value;
+        this.outstandingRequest = outstandingRequest;
         this.authors = new ArrayList<>();
         this.keywords = new ArrayList<>();
         this.bookedBy = new ArrayList<>();
         this.copies = new ArrayList<>();
     }
-    public Document(int id, String type, String title, int value,
-                    Collection<Author> authors, Collection<Keyword> keywords) {
-        this.id = id;
-        this.type = type;
-        this.title = title;
-        this.value = value;
-        this.authors = authors;
-        this.keywords = keywords;
-        this.bookedBy = new ArrayList<>();
+
+    public boolean isOutstandingRequest() {
+        return outstandingRequest;
+    }
+
+    public void setOutstandingRequest(boolean outstandingRequest) {
+        this.outstandingRequest = outstandingRequest;
     }
 
     public String getType() {
@@ -90,10 +82,17 @@ public class Document {
         return copies;
     }
 
-    public Copy getFreeCopy(){
-        for(Copy copy: copies){
-            if(!copy.isCheckedOut()) return copy;
+    public Copy getFreeCopy() {
+        for (Copy copy : copies) {
+            if (!copy.isCheckedOut()) return copy;
         }
         return null;
     }
+
+    public int quantityOfFreeCopies() {
+        return (int) copies.stream()
+                .filter(c -> !c.isCheckedOut())
+                .count();
+    }
+
 }
