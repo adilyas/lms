@@ -44,9 +44,15 @@ public class BookingService {
      * @throws SQLException
      */
     public static void book(Patron patron, Document document) throws SQLException {
-        String insertText = "INSERT INTO lms.patron_booked_document " +
-                "(person_id, document_id, priority, date) VALUES (?, ?, ?, ?);";
-        PreparedStatement st = database.getConnection().prepareStatement(insertText);
+        loggingService.logString("BOOK START\n" +
+                "BY " + patron + "\n" +
+                "DOCUMENT " + document + "\n");
+        String query = "INSERT INTO patron_booked_document " +
+                "(person_id, document_id, priority, request_date) VALUES (?, ?, ?, ?);";
+        PreparedStatement statement = database.getConnection().prepareStatement(query);
+        statement.setInt(1, patron.getId());
+        statement.setInt(2, document.getId());
+        statement.setDate(4, Date.valueOf(LocalDate.now()));
 
 //        less priority value means more important the user is
         int priority;
@@ -67,19 +73,33 @@ public class BookingService {
                 priority = 5;
                 break;
             default:
-                throw new NoSuchElementException("Wrong type; " +
-                        "Also BookingService.book doesn't support librarian types");
+                loggingService.logString("BOOK FINISH\n" +
+                        "RESULT " + "User of type " + patron.getType() + " can't book documents or " +
+                        "should not exist at all."
+                );
+                throw new NoSuchElementException("Wrong type of patron.");
         }
 
-        LocalDate currentDate = LocalDate.now();
+        statement.setInt(3, priority);
+        statement.executeUpdate();
 
-        st.setInt(1, patron.getId());
-        st.setInt(2, document.getId());
-        st.setInt(3, priority);
-        st.setDate(4, Date.valueOf(currentDate));
-        st.executeUpdate();
-        database.getConnection().commit();
+        if (document.getFreeCopy() != null) {
+            notifyService.notifyAboutFreeCopy(patron, document);
+            query = "UPDATE patron_booked_document SET " +
+                    "notification_date = ? WHERE person_id = ? AND document_id = ?;";
+            statement = database.getConnection().prepareStatement(query);
+            statement.setDate(1, Date.valueOf(LocalDate.now()));
+            statement.setInt(2, patron.getId());
+            statement.setInt(3, document.getId());
+            loggingService.logString("BOOK FINISH\n" +
+                    "RESULT " + "User " + patron + " now in queue for document " + document + " and notified about free copy.");
+        }
+        else{
+            loggingService.logString("BOOK FINISH\n" +
+                    "RESULT " + "User " + patron + " now in queue for document " + document + ".");
+        }
     }
+
 
     /**
      * Implements checking out logic.
@@ -181,5 +201,8 @@ public class BookingService {
         statement.setInt(1, document.getId());
         statement.executeUpdate();
         database.getConnection().commit();
+
+        loggingService.logString("OUTSTANDING REQUEST FINISH\n" +
+                "RESULT Queue for document cleaned, patrons who checked out book notified");
     }
 }

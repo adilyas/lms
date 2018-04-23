@@ -102,7 +102,7 @@ public class DocumentDAO {
 
         query = "SELECT p.id FROM persons p JOIN patron_booked_document pd ON p.id = pd.person_id " +
                 "JOIN documents d ON d.id = pd.document_id WHERE document_id = ?" +
-                "ORDER BY priority, date ASC;";
+                "ORDER BY priority, request_date ASC;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
