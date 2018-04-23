@@ -15,7 +15,7 @@ public class LibrarianService {
         this.loggingService = loggingService;
     }
 
-    public void add(Librarian admin, Librarian librarian) throws NoPermissionException, NoSuchObjectException {
+    public void add(Librarian admin, Librarian librarian) throws NoPermissionException, NoSuchObjectException, SQLException {
         loggingService.logString("ADD LIBRARIAN START\n" +
                 "ADMIN " + admin + "\n" +
                 "LIBRARIAN " + librarian);
@@ -37,7 +37,7 @@ public class LibrarianService {
         } catch (SQLException e) {
             loggingService.logString("ADD LIBRARIAN FINISH\n" +
                     "RESULT " + "Something went wrong on data access layer.");
-            e.printStackTrace();
+            throw e;
         }
 
         loggingService.logString("ADD LIBRARIAN FINISH\n" +
@@ -45,7 +45,7 @@ public class LibrarianService {
     }
 
 
-    public void delete(Librarian admin, Librarian librarian) throws NoPermissionException {
+    public void delete(Librarian admin, Librarian librarian) throws NoPermissionException, SQLException {
         loggingService.logString("DELETE LIBRARIAN START\n" +
                 "ADMIN " + admin + "\n" +
                 "LIBRARIAN " + librarian);
@@ -61,7 +61,7 @@ public class LibrarianService {
         } catch (SQLException e) {
             loggingService.logString("DELETE LIBRARIAN FINISH\n" +
                     "RESULT " + "Something went wrong on data access layer.");
-            e.printStackTrace();
+            throw e;
         }
 
         loggingService.logString("DELETE LIBRARIAN FINISH\n" +
@@ -69,7 +69,7 @@ public class LibrarianService {
     }
 
 
-    public void modify(Librarian admin, Librarian librarian) throws NoSuchObjectException, NoPermissionException {
+    public void modify(Librarian admin, Librarian librarian) throws NoSuchObjectException, NoPermissionException, SQLException {
         loggingService.logString("MODIFY LIBRARIAN START\n" +
                 "ADMIN " + admin + "\n" +
                 "LIBRARIAN " + librarian);
@@ -91,7 +91,7 @@ public class LibrarianService {
         } catch (SQLException e) {
             loggingService.logString("MODIFY LIBRARIAN FINISH\n" +
                     "RESULT " + "Something went wrong on data access layer.");
-            e.printStackTrace();
+            throw e;
         }
 
         loggingService.logString("MODIFY LIBRARIAN FINISH\n" +
