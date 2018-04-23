@@ -17,7 +17,7 @@ public class LibrarianDAO {
         LibrarianDAO.database = database;
     }
 
-    static void insert(Librarian librarian) throws SQLException {
+    public static void insert(Librarian librarian) throws SQLException {
         PersonDAO.insert(librarian);
 
         String query = "INSERT INTO librarians (person_id) " +
@@ -53,7 +53,7 @@ public class LibrarianDAO {
         }
     }
 
-    static void update(Librarian librarian) throws SQLException {
+    public static void update(Librarian librarian) throws SQLException {
         PersonDAO.update(librarian);
     }
 }
