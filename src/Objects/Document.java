@@ -23,6 +23,16 @@ public class Document {
         this.copies = new ArrayList<>();
     }
 
+    public Document(String type, String title, int value,
+                    Collection<Author> authors, Collection<Keyword> keywords) {
+        this.type = type;
+        this.title = title;
+        this.value = value;
+        this.authors = new ArrayList<>();
+        this.keywords = new ArrayList<>();
+        this.bookedBy = new ArrayList<>();
+    }
+
     public Document(int id, String type, String title, int value) {
         this.id = id;
         this.type = type;
@@ -32,6 +42,16 @@ public class Document {
         this.keywords = new ArrayList<>();
         this.bookedBy = new ArrayList<>();
         this.copies = new ArrayList<>();
+    }
+    public Document(int id, String type, String title, int value,
+                    Collection<Author> authors, Collection<Keyword> keywords) {
+        this.id = id;
+        this.type = type;
+        this.title = title;
+        this.value = value;
+        this.authors = authors;
+        this.keywords = keywords;
+        this.bookedBy = new ArrayList<>();
     }
 
     public String getType() {

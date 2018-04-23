@@ -19,6 +19,13 @@ public class DocumentDAO {
         DocumentDAO.database = database;
     }
 
+    /**
+     * Inserts document's information to the appropriate database tables.
+     *
+     * @param document fields of this Document class' instance will be used to
+     *                 insert new rows to the database tables.
+     * @throws SQLException
+     */
     static void insert(Document document) throws SQLException {
         String query = "INSERT INTO documents (type, title, value) " +
                 "VALUES (?, ?, ?);";
@@ -51,6 +58,14 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Deletes and information about the given documents.
+     * In fact only document's id is used.
+     *
+     * @param document Document class' instance, should contain document.id
+     *                 which document's id in the database.
+     * @throws SQLException
+     */
     static void delete(Document document) throws SQLException {
         String query = "DELETE FROM author_of_document WHERE document_id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
@@ -71,6 +86,14 @@ public class DocumentDAO {
         database.getConnection().commit();
     }
 
+    /**
+     * Given the id returns Document class'
+     * instance with filled all other fields.
+     *
+     * @param id document's id in the database.
+     * @return Document  class' instance containing all information about the document.
+     * @throws SQLException
+     */
     static Document get(int id) throws SQLException {
         String query = "SELECT * FROM documents WHERE id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
@@ -123,6 +146,13 @@ public class DocumentDAO {
         return result;
     }
 
+    /**
+     * Updates existing data in the database.
+     * Resets all the fields like in insert, but saves table's structure and id.
+     *
+     * @param document instance containing new values to update.
+     * @throws SQLException
+     */
     static void update(Document document) throws SQLException {
         String query = "UPDATE documents SET type = ?, title = ?, value = ? WHERE id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
@@ -166,6 +196,12 @@ public class DocumentDAO {
         }
     }
 
+    /**
+     * Returns the last added id in the documents table.
+     *
+     * @return last added row's id.
+     * @throws SQLException
+     */
     static private int getLastId() throws SQLException {
         String query = "SELECT LAST_INSERT_ID() FROM documents;";
         PreparedStatement st = database.getConnection().prepareStatement(query);

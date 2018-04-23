@@ -17,6 +17,13 @@ public class UserDAO {
         UserDAO.database = database;
     }
 
+    /**
+     * Inserts user's information to the appropriate database tables.
+     *
+     * @param user fields of this User class' instance will be used to
+     *                 insert new rows to the database tables.
+     * @throws SQLException
+     */
     static void insert(User user) throws SQLException {
         PersonDAO.insert(user);
 
@@ -31,6 +38,14 @@ public class UserDAO {
         database.getConnection().commit();
     }
 
+    /**
+     * Deletes and information about the given users.
+     * In fact only user's id is used.
+     *
+     * @param user User class' instance, should contain document.id
+     *                 which document's id in the database.
+     * @throws SQLException
+     */
     static void delete(User user) throws SQLException {
         String query = "DELETE FROM users WHERE person_id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
@@ -41,6 +56,14 @@ public class UserDAO {
         PersonDAO.delete(user);
     }
 
+    /**
+     * Given the id returns User class'
+     * instance with filled all other fields.
+     *
+     * @param id user's id in the database.
+     * @return User class' instance containing all information about the user.
+     * @throws SQLException
+     */
     static User get(int id) throws SQLException {
         Person person = PersonDAO.get(id);
 
@@ -57,6 +80,13 @@ public class UserDAO {
         }
     }
 
+    /**
+     * Updates existing data in the database.
+     * Resets all the fields like in insert, but saves table's structure and id.
+     *
+     * @param user instance containing new values to update.
+     * @throws SQLException
+     */
     static void update(User user) throws SQLException {
         PersonDAO.update(user);
 
