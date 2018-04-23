@@ -20,9 +20,9 @@ public class DocumentDAO {
     }
 
     /**
-     * Inserts document information to the appropriate database tables.
+     * Inserts document's information to the appropriate database tables.
      *
-     * @param document fields of this Document instance will be used to
+     * @param document fields of this Document class' instance will be used to
      *                 insert new rows to the database tables.
      * @throws SQLException
      */
@@ -91,7 +91,7 @@ public class DocumentDAO {
      * instance with filled all other fields.
      *
      * @param id document's id in the database.
-     * @return Document  class' instance containing all information about the document
+     * @return Document  class' instance containing all information about the document.
      * @throws SQLException
      */
     static Document get(int id) throws SQLException {
