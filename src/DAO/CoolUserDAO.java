@@ -35,6 +35,9 @@ public class CoolUserDAO {
             case "librarian3":
                 LibrarianDAO.insert((Librarian) user);
                 break;
+            case "admin":
+                LibrarianDAO.delete((Librarian) user);
+                break;
             default:
                 throw new NoSuchElementException("Wrong type");
         }
@@ -66,6 +69,9 @@ public class CoolUserDAO {
             case "librarian3":
                 LibrarianDAO.delete((Librarian) user);
                 break;
+            case "admin":
+                LibrarianDAO.delete((Librarian) user);
+                break;
             default:
                 throw new NoSuchElementException("Wrong type");
         }
@@ -90,6 +96,8 @@ public class CoolUserDAO {
             case "librarian2":
                 return LibrarianDAO.get(id);
             case "librarian3":
+                return LibrarianDAO.get(id);
+            case "admin":
                 return LibrarianDAO.get(id);
             default:
                 throw new NoSuchElementException("Wrong type");
@@ -121,6 +129,9 @@ public class CoolUserDAO {
                 break;
             case "librarian3":
                 LibrarianDAO.update((Librarian) user);
+                break;
+            case "admin":
+                LibrarianDAO.delete((Librarian) user);
                 break;
             default:
                 throw new NoSuchElementException("Wrong type");

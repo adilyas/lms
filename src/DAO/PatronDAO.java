@@ -17,7 +17,7 @@ public class PatronDAO {
         PatronDAO.database = database;
     }
 
-    static void insert(Patron patron) throws SQLException {
+    public static void insert(Patron patron) throws SQLException {
         PersonDAO.insert(patron);
 
         String query = "INSERT INTO patrons (person_id) " +
@@ -28,7 +28,7 @@ public class PatronDAO {
         database.getConnection().commit();
     }
 
-    static void delete(Patron patron) throws SQLException {
+    public static void delete(Patron patron) throws SQLException {
         String query = "DELETE FROM patron_booked_document WHERE person_id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
@@ -80,7 +80,7 @@ public class PatronDAO {
         return patron;
     }
 
-    static void update(Patron patron) throws SQLException {
+    public static void update(Patron patron) throws SQLException {
         UserDAO.update(patron);
     }
 }

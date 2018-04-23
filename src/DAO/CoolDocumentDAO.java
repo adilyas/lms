@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
 
 public class CoolDocumentDAO {
 
-    static void insert(Document document) throws SQLException {
+    public static void insert(Document document) throws SQLException {
         switch (document.getType()) {
             case "book":
                 BookDAO.insert((Book) document);
@@ -41,7 +41,7 @@ public class CoolDocumentDAO {
         }
     }
 
-    static void delete(Document document) throws SQLException {
+    public static void delete(Document document) throws SQLException {
         switch (document.getType()) {
             case "book":
                 BookDAO.delete((Book) document);
@@ -57,7 +57,7 @@ public class CoolDocumentDAO {
         }
     }
 
-    static void update(Document document) throws SQLException {
+    public static void update(Document document) throws SQLException {
         switch (document.getType()) {
             case "book":
                 BookDAO.update((Book) document);

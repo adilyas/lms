@@ -6,9 +6,11 @@ import Database.*;
 public class LibrarianService {
 
     private Database database;
+    private LoggingService loggingService;
 
-    public LibrarianService(Database database) {
+    public LibrarianService(Database database, LoggingService loggingService) {
         this.database = database;
+        this.loggingService = loggingService;
     }
 
     public void add(Librarian admin, Librarian librarian) {
