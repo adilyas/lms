@@ -11,6 +11,7 @@ public class Document {
     private Collection<Author> authors;
     private Collection<Keyword> keywords;
     private Collection<Patron> bookedBy;
+    private Collection<Copy> copies;
 
     public Document(String type, String title, int value) {
         this.type = type;
@@ -19,6 +20,7 @@ public class Document {
         this.authors = new ArrayList<>();
         this.keywords = new ArrayList<>();
         this.bookedBy = new ArrayList<>();
+        this.copies = new ArrayList<>();
     }
 
     public Document(String type, String title, int value,
@@ -39,6 +41,7 @@ public class Document {
         this.authors = new ArrayList<>();
         this.keywords = new ArrayList<>();
         this.bookedBy = new ArrayList<>();
+        this.copies = new ArrayList<>();
     }
     public Document(int id, String type, String title, int value,
                     Collection<Author> authors, Collection<Keyword> keywords) {
@@ -83,4 +86,14 @@ public class Document {
         return bookedBy;
     }
 
+    public Collection<Copy> getCopies() {
+        return copies;
+    }
+
+    public Copy getFreeCopy(){
+        for(Copy copy: copies){
+            if(!copy.isCheckedOut()) return copy;
+        }
+        return null;
+    }
 }

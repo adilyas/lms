@@ -133,6 +133,16 @@ public class DocumentDAO {
         while (rs.next())
             result.getBookedBy().add(PatronDAO.get(rs.getInt("id")));
 
+        query = "SELECT id FROM copies " +
+                "WHERE document_id = ? " +
+                "ORDER BY is_checked_out ASC;";
+        st = database.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+        database.getConnection().commit();
+        while (rs.next())
+            result.getCopies().add(CopyDAO.get(rs.getInt("id")));
+
         return result;
     }
 

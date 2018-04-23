@@ -1,14 +1,16 @@
 package Services;
 
+import DAO.CopyDAO;
 import Database.Database;
 import Objects.*;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class BookingService {
     static private Database database;
@@ -86,28 +88,32 @@ public class BookingService {
      * @param patron    checking out patron
      * @param librarian librarian who has
      *                  let patron to check out the document
-     * @param copy      particular copy the patring is checking out
+     * @param document  particular document the patron is checking out
      * @throws SQLException
      */
-    public static void checkOut(Patron patron, Librarian librarian, Copy copy) throws SQLException {
-        if (!isAvailable(copy.getDocument())) {
-            return; // may be it's better to write some feedback here
+    public static void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException {
+        loggingService.logString("CHECKOUT START\n" +
+                "BY " + patron + "\n" +
+                "VERIFIED BY " + librarian + "\n" +
+                "DOCUMENT " + document + "\n");
+        Copy copy = document.getFreeCopy();
+        if (copy == null) {
+            loggingService.logString("CHECKOUT FINISH\n" +
+                    "RESULT " + "No free copy available.");
+            throw new NoSuchElementException("No free copy available.");
         }
-        String updateText = "UPDATE copies SET is_checked_out = ?, " +
-                "holder_id = ?, renew_times = renew_times + 1, check_out_date = ?, " +
-                "due_date = ? WHERE id = ?;";
-        PreparedStatement st = database.getConnection().prepareStatement(updateText);
-
         int dueWeeks = calcDueWeeks(patron, copy);
         LocalDate currentDate = LocalDate.now();
         LocalDate dueDate = currentDate.plusWeeks(dueWeeks);
 
-        st.setInt(1, 1);
-        st.setInt(2, patron.getId());
-        st.setDate(3, Date.valueOf(currentDate));
-        st.setDate(4, Date.valueOf(dueDate));
-        st.executeUpdate();
-        database.getConnection().commit();
+        copy.setCheckedOut(true);
+        copy.setHolder(patron);
+        copy.setCheckedOutDate(LocalDate.now());
+        copy.setDueDate(LocalDate.now().plusWeeks(calcDueWeeks(patron, copy)));
+
+        CopyDAO.update(copy);
+        loggingService.logString("CHECKOUT FINISH\n" +
+                "RESULT " + "Checked out on " + copy.getCheckedOutDate() + " until " + copy.getDueDate() + ".");
     }
 
     /**
@@ -156,17 +162,24 @@ public class BookingService {
         return dueWeeks;
     }
 
-    public static void outstandingRequest(Librarian librarian, Document document) {
+    public static void outstandingRequest(Librarian librarian, Document document) throws SQLException {
+        loggingService.logString("OUTSTANDING REQUEST START\n" +
+                "LIBRARIAN " + librarian + "\n" +
+                "DOCUMENT " + document + "\n");
 
-    }
+        notifyService.notify(document.getBookedBy(), "Sorry your request for " + document.getTitle() +
+                " was declined because of outstanding request. Can try to book this book again or ask librarian.");
 
-    private static Boolean isAvailable(Document document) throws SQLException {
-        String queryText = "SELECT count(*) FROM copies WHERE document_id = ? " +
-                "AND is_checked_out = 0";
-        PreparedStatement st = database.getConnection().prepareStatement(queryText);
-        st.setInt(1, document.getId());
-        ResultSet rs = st.executeQuery();
-        rs.next();
-        return rs.getInt("count(*)") > 0;
+        notifyService.notify(document.getCopies().stream()
+                .map(Copy::getHolder)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()), "You should return " + document.getTitle() +
+                " due to outstanding request. Sorry, ask librarian for more details.");
+
+        String query = "DELETE FROM patron_booked_document WHERE document_id = ?;";
+        PreparedStatement statement = database.getConnection().prepareStatement(query);
+        statement.setInt(1, document.getId());
+        statement.executeUpdate();
+        database.getConnection().commit();
     }
 }

@@ -19,8 +19,8 @@ public class NotifyService {
      * @param receivers
      * @param message
      */
-    public void notify(Collection<User> receivers, String message){
-        for(User receiver: receivers) {
+    public <T extends User> void notify(Collection<T> receivers, String message){
+        for(T receiver: receivers) {
             System.out.println("NOTIFICATION FOR:");
             System.out.println(receiver);
             System.out.println("TEXT:");
