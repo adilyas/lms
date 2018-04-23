@@ -14,28 +14,27 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BookingService {
-    static private Database database;
-    static private LoggingService loggingService;
-    static private NotifyService notifyService;
+    private Database database;
+    private LoggingService loggingService;
+    private NotifyService notifyService;
 
-    public static void init(LoggingService loggingService, Database database, NotifyService notifyService) {
-        BookingService.database = database;
-        BookingService.loggingService = loggingService;
-        BookingService.notifyService = notifyService;
+    public BookingService(LoggingService loggingService, Database database, NotifyService notifyService) {
+        this.database = database;
+        this.loggingService = loggingService;
+        this.notifyService = notifyService;
     }
 
-    static void setDatabase(Database database) {
-        BookingService.database = database;
+    void setDatabase(Database database) {
+        this.database = database;
     }
 
-    public static void setLoggingService(LoggingService loggingService) {
-        BookingService.loggingService = loggingService;
+    public void setLoggingService(LoggingService loggingService) {
+        this.loggingService = loggingService;
     }
 
-    public static void setNotifyService(NotifyService notifyService) {
-        BookingService.notifyService = notifyService;
+    public void setNotifyService(NotifyService notifyService) {
+        this.notifyService = notifyService;
     }
-
 
 
     /**
@@ -46,7 +45,7 @@ public class BookingService {
      * @param document booking document
      * @throws SQLException
      */
-    public static void book(Patron patron, Document document) throws SQLException {
+    public void book(Patron patron, Document document) throws SQLException {
         loggingService.logString("BOOK START\n" +
                 "BY " + patron + "\n" +
                 "DOCUMENT " + document);
@@ -85,6 +84,10 @@ public class BookingService {
 
         statement.setInt(3, priority);
         statement.executeUpdate();
+        database.getConnection().commit();
+
+        document.getBookedBy().add(patron);
+        patron.getWaitingList().add(document);
 
         if (document.getFreeCopy() != null) {
             notifyService.notifyAboutFreeCopy(patron, document);
@@ -94,16 +97,15 @@ public class BookingService {
             statement.setDate(1, Date.valueOf(LocalDate.now()));
             statement.setInt(2, patron.getId());
             statement.setInt(3, document.getId());
+            statement.executeUpdate();
+            database.getConnection().commit();
             loggingService.logString("BOOK FINISH\n" +
                     "RESULT " + "User " + patron + " now in queue for document " + document + " and notified about free copy.");
-        }
-        else{
+        } else {
             loggingService.logString("BOOK FINISH\n" +
                     "RESULT " + "User " + patron + " now in queue for document " + document + ".");
         }
     }
-
-
 
 
     /**
@@ -116,44 +118,42 @@ public class BookingService {
      * @param document  particular document the patron is checking out
      * @throws SQLException
      */
-    public static void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException {
+    public void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException {
         loggingService.logString("CHECKOUT START\n" +
                 "BY " + patron + "\n" +
                 "VERIFIED BY " + librarian + "\n" +
                 "DOCUMENT " + document);
-        if(document.isOutstandingRequest()){
+        if (document.isOutstandingRequest()) {
             loggingService.logString("CHECKOUT FINISH\n" +
                     "RESULT " + "Can't check out this document because of outstanding request.");
             throw new NoSuchElementException("Can't check out this document because of outstanding request.");
         }
-        if(!patron.getWaitingList().contains(document)){
+        if (!patron.getWaitingList().contains(document)) {
             loggingService.logString("CHECKOUT FINISH\n" +
                     "RESULT " + "This patron did't book this document.");
             throw new NoSuchElementException("This patron did't book this document.");
         }
-        if(document.quantityOfFreeCopies() <= ((ArrayList) document.getBookedBy()).indexOf(patron)){
+        if (document.quantityOfFreeCopies() <= ((ArrayList) document.getBookedBy()).indexOf(patron)) {
             loggingService.logString("CHECKOUT FINISH\n" +
-                    "RESULT " + "This patron can't take this document due to his place in queue.");
-            throw new NoSuchElementException("This patron can't take this document due to his place in queue.");
-        }
-        Copy copy = document.getFreeCopy();
-        if (copy == null) {
-            loggingService.logString("CHECKOUT FINISH\n" +
-                    "RESULT " + "No free copy available.");
-            throw new NoSuchElementException("No free copy available.");
+                    "RESULT " + "This patron can't take this document due to his place in queue and quantity of free copies.");
+            throw new NoSuchElementException("This patron can't take this document due to his place in queue and " +
+                    "quantity of free copies.");
         }
 
+        Copy copy = document.getFreeCopy();
         copy.setCheckedOut(true);
         copy.setHolder(patron);
         copy.setCheckedOutDate(LocalDate.now());
         copy.setDueDate(LocalDate.now().plusWeeks(calcDueWeeks(patron, copy)));
 
+        copy.getDocument().getBookedBy().remove(patron);
+        patron.getWaitingList().remove(document);
+        patron.getCheckedOutCopies().add(copy);
+
         CopyDAO.update(copy);
         loggingService.logString("CHECKOUT FINISH\n" +
                 "RESULT " + "Checked out on " + copy.getCheckedOutDate() + " until " + copy.getDueDate() + ".");
     }
-
-
 
 
     /**
@@ -164,10 +164,10 @@ public class BookingService {
      * @param copy   copy which is going to be renewed
      * @throws SQLException
      */
-    public static void renew(Patron patron, Copy copy) throws SQLException {
+    public void renew(Patron patron, Copy copy) throws SQLException {
         loggingService.logString("RENEW START\n" +
-            "BY " + patron + "\n" +
-            "COPY " + copy);
+                "BY " + patron + "\n" +
+                "COPY " + copy);
 
         if (copy.getRenewTimes() > 1 && !patron.getType().equals("VP") || copy.getDocument().isOutstandingRequest()) {
             loggingService.logString("RENEW FINISH\n" +
@@ -185,7 +185,7 @@ public class BookingService {
 
     }
 
-    private static int calcDueWeeks(Patron patron, Copy copy) {
+    private int calcDueWeeks(Patron patron, Copy copy) {
         int dueWeeks = 3;
         String docType = copy.getDocument().getType();
         if (patron.getType().equals("VP")) {
@@ -206,17 +206,42 @@ public class BookingService {
     }
 
 
+    /**
+     * Implements return logic.
+     *
+     * @param patron patron who returns the copy.
+     * @param copy   copy which is going to be returned.
+     * @throws SQLException
+     */
+    public void returnCopy(Librarian librarian, Patron patron, Copy copy) throws SQLException {
+        loggingService.logString("RETURN START\n" +
+                "BY " + patron + "\n" +
+                "VERIFIED BY " + librarian + "\n" +
+                "COPY " + copy);
 
+        copy.setHolder(null);
+        copy.setCheckedOut(false);
+        copy.setRenewTimes(0);
+        copy.setCheckedOutDate(null);
+        copy.setDueDate(null);
+        CopyDAO.update(copy);
+
+        patron.getCheckedOutCopies().remove(copy);
+
+        loggingService.logString("RETURN FINISHED\n" +
+                "RESULT " + "Document was successfully returned.");
+    }
 
 
     /**
      * Clean all queue for document, notifies bookers about this, ask checkouters for return, block document from new
      * booking.
+     *
      * @param librarian
      * @param document
      * @throws SQLException
      */
-    public static void startOutstandingRequest(Librarian librarian, Document document) throws SQLException {
+    public void startOutstandingRequest(Librarian librarian, Document document) throws SQLException {
         loggingService.logString("START OUTSTANDING REQUEST START\n" +
                 "LIBRARIAN " + librarian + "\n" +
                 "DOCUMENT " + document + "\n");
@@ -243,11 +268,12 @@ public class BookingService {
 
     /**
      * Unblock document for booking.
+     *
      * @param librarian
      * @param document
      * @throws SQLException
      */
-    public static void finishOutstandingRequest(Librarian librarian, Document document) throws SQLException {
+    public void finishOutstandingRequest(Librarian librarian, Document document) throws SQLException {
         loggingService.logString("OUTSTANDING REQUEST Fi\n" +
                 "LIBRARIAN " + librarian + "\n" +
                 "DOCUMENT " + document + "\n");
