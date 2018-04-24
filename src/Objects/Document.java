@@ -2,6 +2,9 @@ package Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Document {
     private int id;
@@ -96,4 +99,8 @@ public class Document {
                 .count();
     }
 
+    @Override
+    public String toString() {
+        return "[ID:" + this.id + "]" + this.title + " by " + this.authors.stream().filter(Objects::nonNull).map((author) -> author.toString()).collect(Collectors.joining(" "));
+    }
 }

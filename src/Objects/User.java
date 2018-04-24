@@ -37,4 +37,9 @@ public class User extends Person {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " type: " + this.type + " email: " + this.email;
+    }
 }

@@ -40,4 +40,9 @@ public class Person {
     public void setSurname(String surname) {
         this.surname = surname;
     }
+
+    @Override
+    public String toString() {
+        return "[ID:" + this.id +"]" + this.name + ' ' + this.surname;
+    }
 }

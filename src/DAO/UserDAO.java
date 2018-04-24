@@ -82,6 +82,30 @@ public class UserDAO {
     }
 
     /**
+     * Given the email returns User class'
+     * instance with filled all other fields.
+     *
+     * @param email user's id in the database.
+     * @return User class' instance containing all information about the user.
+     * @throws SQLException
+     */
+    static User getByEmail(String email) throws SQLException {
+
+        String query = "SELECT * FROM users WHERE email = ?;";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setString(1, email);
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            Person person = PersonDAO.get(rs.getInt("person_id"));
+            return new User(person.getId(), person.getName(), person.getSurname(), rs.getString("type"), rs.getString("phone_number"),
+                    rs.getString("address"), rs.getString("email"));
+        } else {
+            throw new NoSuchElementException();
+        }
+    }
+
+    /**
      * Updates existing data in the database.
      * Resets all the fields like in insert, but saves table's structure and id.
      *
@@ -104,6 +128,5 @@ public class UserDAO {
         st.setString(4, user.getEmail());
         st.setInt(5, user.getId());
         st.executeUpdate();
-
     }
 }

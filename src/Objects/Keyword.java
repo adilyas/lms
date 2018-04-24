@@ -24,4 +24,9 @@ public class Keyword {
     public String getWord() {
         return word;
     }
+
+    @Override
+    public String toString() {
+        return "[ID:" + this.id + "]" + this.word;
+    }
 }
