@@ -103,8 +103,10 @@ public class DocumentDAO {
         database.getConnection().commit();
         if (!rs.next())
             throw new NoSuchElementException();
-        Document result = new Document(rs.getInt("id"), rs.getString("type"), rs.getString("title"),
-                rs.getInt("value"), rs.getBoolean("outstanding_request"));
+        Document result = new Document(rs.getInt("id"), rs.getString("type"),
+                rs.getString("title"), rs.getInt("value"),
+                rs.getBoolean("outstanding_request"), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>());
 
         query = "SELECT id, word FROM keywords JOIN document_has_keyword ON keyword_id = id WHERE document_id = ?";
         st = database.getConnection().prepareStatement(query);

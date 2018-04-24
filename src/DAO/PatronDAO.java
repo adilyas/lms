@@ -55,7 +55,7 @@ public class PatronDAO {
         Patron patron;
         if (rs.next()) {
             patron = new Patron(user.getId(), user.getName(), user.getSurname(), user.getType(), user.getPhoneNumber(),
-                    user.getAddress());
+                    user.getAddress(), user.getEmail());
         } else {
             throw new NoSuchElementException();
         }

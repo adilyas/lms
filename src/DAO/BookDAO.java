@@ -54,11 +54,11 @@ public final class BookDAO {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next())
-            return new Book(document.getId(), document.getTitle(), document.getValue(), document.getAuthors(),
-                    document.getKeywords(), rs.getBoolean("is_reference"),
-                    rs.getBoolean("is_bestseller"), rs.getString("Publisher"),
-                    rs.getDate("date_of_publishing").toLocalDate(), rs.getInt("edition"),
-                    rs.getInt("editionYear"));
+            return new Book(document.getId(), document.getTitle(), document.getValue(), document.isOutstandingRequest(),
+                    document.getAuthors(), document.getKeywords(), document.getBookedBy(), document.getCopies(),
+                    rs.getBoolean("is_reference"), rs.getBoolean("is_bestseller"),
+                    rs.getString("Publisher"), rs.getDate("date_of_publishing").toLocalDate(),
+                    rs.getInt("edition"), rs.getInt("editionYear"));
         else
             throw new NoSuchElementException();
     }

@@ -38,7 +38,7 @@ public class AVMaterialDAO {
         DocumentDAO.delete(avMaterial);
     }
 
-    static Book get(int id) throws SQLException {
+    static AVMaterial get(int id) throws SQLException {
         Document document = DocumentDAO.get(id);
 
         String query = "SELECT 1 FROM av_materials WHERE document_id = ?";
@@ -46,7 +46,7 @@ public class AVMaterialDAO {
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
         if (rs.next())
-            return (Book) document;
+            return (AVMaterial) document;
         else
             throw new NoSuchElementException();
     }

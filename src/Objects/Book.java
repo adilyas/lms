@@ -11,9 +11,10 @@ public class Book extends Document {
     private int edition;
     private int editionYear;
 
-    public Book(String title, int value, Collection<Author> authors, Collection<Keyword> keywords, Boolean isReference,
+    public Book(String title, int value, boolean outstandingRequest, Collection<Author> authors,
+                Collection<Keyword> keywords, Collection<Patron> bookedBy, Collection<Copy> copies, Boolean isReference,
                 Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition, int editionYear) {
-        super("book", title, value, authors, keywords);
+        super("book", title, value, outstandingRequest, authors, keywords, bookedBy, copies);
         this.isReference = isReference;
         this.isBestseller = isBestseller;
         this.publisher = publisher;
@@ -22,24 +23,10 @@ public class Book extends Document {
         this.editionYear = editionYear;
     }
 
-    /**
-     *
-     * @param id id
-     * @param title title
-     * @param value value
-     * @param authors authors
-     * @param keywords keywords
-     * @param isReference isReference
-     * @param isBestseller isBestseller
-     * @param publisher publisher
-     * @param dateOfPublishing dateOfPublishing
-     * @param edition edition
-     * @param editionYear editionsYear
-     */
-    public Book(int id, String title, int value, Collection<Author> authors, Collection<Keyword> keywords,
-                Boolean isReference, Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition,
-                int editionYear) {
-        super(id, "book", title, value, authors, keywords);
+    public Book(int id, String title, int value, boolean outstandingRequest, Collection<Author> authors,
+                Collection<Keyword> keywords, Collection<Patron> bookedBy, Collection<Copy> copies, Boolean isReference,
+                Boolean isBestseller, String publisher, LocalDate dateOfPublishing, int edition, int editionYear) {
+        super(id, "book", title, value, outstandingRequest, authors, keywords, bookedBy, copies);
         this.isReference = isReference;
         this.isBestseller = isBestseller;
         this.publisher = publisher;

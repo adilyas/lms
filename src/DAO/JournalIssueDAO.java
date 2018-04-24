@@ -52,8 +52,8 @@ public class JournalIssueDAO {
         if (!rs.next())
             throw new NoSuchElementException();
         JournalIssue journalIssue = new JournalIssue(document.getId(), document.getTitle(), document.getValue(),
-                document.getAuthors(), document.getKeywords(), rs.getString("publisher"),
-                rs.getDate("issue_date").toLocalDate());
+                document.isOutstandingRequest(), document.getAuthors(), document.getKeywords(), document.getBookedBy(),
+                document.getCopies(), rs.getString("publisher"), rs.getDate("issue_date").toLocalDate());
 
         query = "SELECT id FROM journal_articles WHERE issue_id = ?";
         st = database.getConnection().prepareStatement(query);
