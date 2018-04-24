@@ -3,6 +3,7 @@ package DAO;
 import Database.Database;
 import Objects.Librarian;
 import Objects.Person;
+import Objects.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,14 +19,13 @@ public class LibrarianDAO {
     }
 
     public static void insert(Librarian librarian) throws SQLException {
-        PersonDAO.insert(librarian);
+        UserDAO.insert(librarian);
 
         String query = "INSERT INTO librarians (person_id) " +
                 "VALUES (?);";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
-
     }
 
     static void delete(Librarian librarian) throws SQLException {
@@ -39,7 +39,7 @@ public class LibrarianDAO {
     }
 
     static Librarian get(int id) throws SQLException {
-        Person person = PersonDAO.get(id);
+        User user = UserDAO.get(id);
 
         String query = "SELECT 1 FROM librarians WHERE person_id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
@@ -47,13 +47,13 @@ public class LibrarianDAO {
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
-            return (Librarian) person;
+            return (Librarian) user;
         } else {
             throw new NoSuchElementException();
         }
     }
 
     public static void update(Librarian librarian) throws SQLException {
-        PersonDAO.update(librarian);
+        UserDAO.update(librarian);
     }
 }
