@@ -14,7 +14,7 @@ public class AVMaterialDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         AVMaterialDAO.database = database;
     }
 

@@ -18,7 +18,7 @@ public class BookingService {
     private LoggingService loggingService;
     private NotifyService notifyService;
 
-    public BookingService(LoggingService loggingService, Database database, NotifyService notifyService) {
+    public BookingService(Database database, LoggingService loggingService, NotifyService notifyService) {
         this.database = database;
         this.loggingService = loggingService;
         this.notifyService = notifyService;

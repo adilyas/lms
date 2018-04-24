@@ -10,11 +10,9 @@ import java.sql.SQLException;
 
 public class DocumentService {
 
-    private Database database;
     private LoggingService loggingService;
 
-    public DocumentService(Database database, LoggingService loggingService) {
-        this.database = database;
+    public DocumentService(LoggingService loggingService) {
         this.loggingService = loggingService;
     }
 

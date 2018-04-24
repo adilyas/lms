@@ -9,12 +9,9 @@ import javax.naming.NoPermissionException;
 import java.sql.SQLException;
 
 public class PatronService {
-
-    private Database database;
     private LoggingService loggingService;
 
-    public PatronService(Database database, LoggingService loggingService) {
-        this.database = database;
+    public PatronService(LoggingService loggingService) {
         this.loggingService = loggingService;
     }
 
