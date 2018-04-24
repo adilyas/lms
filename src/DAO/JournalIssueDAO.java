@@ -27,7 +27,7 @@ public class JournalIssueDAO {
         st.setString(2, journalIssue.getPublisher());
         st.setDate(3, Date.valueOf(journalIssue.getIssueDate()));
         st.executeUpdate();
-        database.getConnection().commit();
+
         journalIssue.setId(getLastId());
     }
 
@@ -36,7 +36,7 @@ public class JournalIssueDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalIssue.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         DocumentDAO.delete(journalIssue);
     }
@@ -48,18 +48,18 @@ public class JournalIssueDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (!rs.next())
             throw new NoSuchElementException();
         JournalIssue journalIssue = new JournalIssue(document.getId(), document.getTitle(), document.getValue(),
-                document.getAuthors(), document.getKeywords(), rs.getString("publisher"),
-                rs.getDate("issue_date").toLocalDate());
+                document.isOutstandingRequest(), document.getAuthors(), document.getKeywords(), document.getBookedBy(),
+                document.getCopies(), rs.getString("publisher"), rs.getDate("issue_date").toLocalDate());
 
         query = "SELECT id FROM journal_articles WHERE issue_id = ?";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalIssue.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             journalIssue.getJournalArticles().add(JournalArticleDAO.get(rs.getInt("id")));
         return journalIssue;
@@ -74,7 +74,7 @@ public class JournalIssueDAO {
         st.setDate(2, Date.valueOf(journalIssue.getIssueDate()));
         st.setInt(3, journalIssue.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static private int getLastId() throws SQLException {

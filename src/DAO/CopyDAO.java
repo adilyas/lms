@@ -28,7 +28,7 @@ public class CopyDAO {
         st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
         st.setDate(6, Date.valueOf(copy.getDueDate()));
         st.executeUpdate();
-        database.getConnection().commit();
+
         copy.setId(getLastId());
     }
 
@@ -37,7 +37,7 @@ public class CopyDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, copy.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static Copy get(int id) throws SQLException {
@@ -45,7 +45,7 @@ public class CopyDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (!rs.next())
             throw new NoSuchElementException();
         return new Copy(rs.getInt("id"), CoolDocumentDAO.get(rs.getInt("document_id")),
@@ -66,7 +66,7 @@ public class CopyDAO {
         st.setDate(6, Date.valueOf(copy.getDueDate()));
         st.setInt(7, copy.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static private int getLastId() throws SQLException {

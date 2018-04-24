@@ -34,14 +34,14 @@ public class Testcase {
     }
 
     private void cleanTables() throws SQLException {
-        String query = "DELETE FROM ? WHERE TRUE";
-        PreparedStatement statement = database.getConnection().prepareStatement(query);
+        String query = "DELETE FROM $table_name WHERE TRUE;";
         String[] tables = new String[]{"article_has_keyword", "author_of_article", "author_of_article",
                 "author_of_document", "authors", "av_materials", "books", "copies", "document_has_keyword", "documents",
-                "journal_articles", "journal_issues", "keyword", "librarians", "patron_booked_document", "patrons",
+                "journal_articles", "journal_issues", "keywords", "librarians", "patron_booked_document", "patrons",
                 "persons", "users"};
         for(String table: tables){
-            statement.setString(1, table);
+            String readyQuery = query.replace("$table_name", table);
+            PreparedStatement statement = database.getConnection().prepareStatement(readyQuery);
             statement.executeUpdate();
         }
     }

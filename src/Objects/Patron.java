@@ -13,7 +13,7 @@ public class Patron extends User {
         checkedOutCopies = new ArrayList<>();
     }
 
-    public Patron(int id, String name, String surname, String phoneNumber, String address, String type, String email) {
+    public Patron(int id, String name, String surname, String type, String phoneNumber, String address, String email) {
         super(id, name, surname, type, phoneNumber, address, email);
         waitingList = new ArrayList<>();
         checkedOutCopies = new ArrayList<>();

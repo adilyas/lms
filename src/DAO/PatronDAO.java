@@ -25,7 +25,7 @@ public class PatronDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     public static void delete(Patron patron) throws SQLException {
@@ -33,13 +33,13 @@ public class PatronDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM patrons WHERE person_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         UserDAO.delete(patron);
     }
@@ -51,11 +51,11 @@ public class PatronDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         Patron patron;
         if (rs.next()) {
             patron = new Patron(user.getId(), user.getName(), user.getSurname(), user.getType(), user.getPhoneNumber(),
-                    user.getAddress());
+                    user.getAddress(), user.getEmail());
         } else {
             throw new NoSuchElementException();
         }
@@ -65,7 +65,7 @@ public class PatronDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             patron.getWaitingList().add(CoolDocumentDAO.get(rs.getInt("id")));
 
@@ -73,7 +73,7 @@ public class PatronDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             patron.getCheckedOutCopies().add(CopyDAO.get(rs.getInt("id")));
 

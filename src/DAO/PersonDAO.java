@@ -13,7 +13,7 @@ public class PersonDAO {
     static private Database database;
 
     public static void setDatabase(Database database) {
-        database = database;
+        PersonDAO.database = database;
     }
 
     static Person get(int id) throws SQLException {
@@ -21,7 +21,7 @@ public class PersonDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return new Person(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -35,7 +35,7 @@ public class PersonDAO {
         st.setString(1, person.getName());
         st.setString(2, person.getSurname());
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return new Person(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -50,7 +50,7 @@ public class PersonDAO {
         st.setString(1, person.getName());
         st.setString(2, person.getSurname());
         st.executeUpdate();
-        database.getConnection().commit();
+
         person.setId(PersonDAO.getLastId());
     }
 
@@ -63,7 +63,7 @@ public class PersonDAO {
         st.setString(2, person.getSurname());
         st.setInt(3, person.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static void delete(Person person) throws SQLException {
@@ -71,7 +71,7 @@ public class PersonDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, person.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static int getLastId() throws SQLException {

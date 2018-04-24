@@ -2,7 +2,6 @@ package Objects;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Predicate;
 
 public class Document {
     private int id;
@@ -15,27 +14,29 @@ public class Document {
     private Collection<Patron> bookedBy;
     private Collection<Copy> copies;
 
-    public Document(String type, String title, int value, boolean outstandingRequest) {
+    public Document(String type, String title, int value, boolean outstandingRequest, Collection<Author> authors,
+                    Collection<Keyword> keywords, Collection<Patron> bookedBy, Collection<Copy> copies) {
         this.type = type;
         this.title = title;
         this.value = value;
         this.outstandingRequest = outstandingRequest;
-        this.authors = new ArrayList<>();
-        this.keywords = new ArrayList<>();
-        this.bookedBy = new ArrayList<>();
-        this.copies = new ArrayList<>();
+        this.authors = authors;
+        this.keywords = keywords;
+        this.bookedBy = bookedBy;
+        this.copies = copies;
     }
 
-    public Document(int id, String type, String title, int value, boolean outstandingRequest) {
+    public Document(int id, String type, String title, int value, boolean outstandingRequest, Collection<Author> authors,
+                    Collection<Keyword> keywords, Collection<Patron> bookedBy, Collection<Copy> copies) {
         this.id = id;
         this.type = type;
         this.title = title;
         this.value = value;
         this.outstandingRequest = outstandingRequest;
-        this.authors = new ArrayList<>();
-        this.keywords = new ArrayList<>();
-        this.bookedBy = new ArrayList<>();
-        this.copies = new ArrayList<>();
+        this.authors = authors;
+        this.keywords = keywords;
+        this.bookedBy = bookedBy;
+        this.copies = copies;
     }
 
     public boolean isOutstandingRequest() {

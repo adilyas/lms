@@ -84,7 +84,7 @@ public class BookingService {
 
         statement.setInt(3, priority);
         statement.executeUpdate();
-        database.getConnection().commit();
+
 
         document.getBookedBy().add(patron);
         patron.getWaitingList().add(document);
@@ -98,7 +98,7 @@ public class BookingService {
             statement.setInt(2, patron.getId());
             statement.setInt(3, document.getId());
             statement.executeUpdate();
-            database.getConnection().commit();
+
             loggingService.logString("BOOK FINISH\n" +
                     "RESULT " + "User " + patron + " now in queue for document " + document + " and notified about free copy.");
         } else {
@@ -259,7 +259,7 @@ public class BookingService {
         PreparedStatement statement = database.getConnection().prepareStatement(query);
         statement.setInt(1, document.getId());
         statement.executeUpdate();
-        database.getConnection().commit();
+
         document.setOutstandingRequest(true);
 
         loggingService.logString("START OUTSTANDING REQUEST FINISH\n" +
