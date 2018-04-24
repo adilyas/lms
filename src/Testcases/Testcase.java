@@ -36,9 +36,8 @@ public class Testcase {
     private void cleanTables() throws SQLException {
         String query = "DELETE FROM $table_name WHERE TRUE;";
         String[] tables = new String[]{"article_has_keyword", "author_of_article", "author_of_article",
-                "author_of_document", "authors", "av_materials", "books", "copies", "document_has_keyword", "documents",
-                "journal_articles", "journal_issues", "keywords", "librarians", "patron_booked_document", "patrons",
-                "persons", "users"};
+                "author_of_document", "document_has_keyword", "patron_booked_document", "authors", "av_materials",
+                "books", "copies", "patrons", "librarians", "users", "documents", "persons"};
         for(String table: tables){
             String readyQuery = query.replace("$table_name", table);
             PreparedStatement statement = database.getConnection().prepareStatement(readyQuery);
@@ -69,7 +68,7 @@ public class Testcase {
         LibrarianDAO.insert(admin);
         loggingService.logString("TESTCASE 1 START");
         librarianService.add(admin, new Librarian("Name1", "Surname1", "admin",
-                "phone_number1","address1", "email1"));
+                "phone_numbe1","address1", "email1"));
         loggingService.logString("TESTCASE 1 FINISH");
 
     }
