@@ -104,6 +104,33 @@ public class CoolUserDAO {
         }
     }
 
+    static User getByEmail(String email) throws SQLException {
+        User user = UserDAO.getByEmail(email);
+
+        switch (user.getType()) {
+            case "student":
+                return PatronDAO.getByEmail(email);
+            case "instructor":
+                return PatronDAO.getByEmail(email);
+            case "professor":
+                return PatronDAO.getByEmail(email);
+            case "TA":
+                return PatronDAO.getByEmail(email);
+            case "VP":
+                return PatronDAO.getByEmail(email);
+            case "librarian1":
+                return LibrarianDAO.getByEmail(email);
+            case "librarian2":
+                return LibrarianDAO.getByEmail(email);
+            case "librarian3":
+                return LibrarianDAO.getByEmail(email);
+            case "admin":
+                return LibrarianDAO.getByEmail(email);
+            default:
+                throw new NoSuchElementException("Wrong type");
+        }
+    }
+
     static void update(User user) throws SQLException {
         switch (user.getType()) {
             case "student":

@@ -28,16 +28,31 @@ public class KeywordDAO {
         }
     }
 
-    static Keyword getByWord(Keyword word) throws SQLException {
-        String query = "select * from keywords where name = ? and surname = ?;";
+    static Keyword getByWord(String word) throws SQLException {
+        String query = "select * from keywords where word = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);
-        st.setString(1, word.getWord());
+        st.setString(1, word);
         ResultSet rs = st.executeQuery();
 
         if (rs.next()) {
             return new Keyword(rs.getInt("id"), rs.getString("word"));
         } else {
             throw new NoSuchElementException();
+        }
+    }
+
+    public static Keyword getByWordOrCreate(String word) throws SQLException {
+        String query = "select * from keywords where word = ?;";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setString(1, word);
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            return new Keyword(rs.getInt("id"), rs.getString("word"));
+        } else {
+            Keyword keyword = new Keyword(word);
+            KeywordDAO.insert(keyword);
+            return keyword;
         }
     }
 
