@@ -3,7 +3,8 @@ package Testcases;
 import DAO.*;
 import Database.Database;
 import Objects.Author;
-import Objects.JournalArticle;
+import Objects.Book;
+import Objects.Copy;
 import Objects.Librarian;
 import Services.*;
 
@@ -11,6 +12,8 @@ import javax.naming.NoPermissionException;
 import java.rmi.NoSuchObjectException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Testcase {
     private Database database;
@@ -39,14 +42,14 @@ public class Testcase {
         String[] tables = new String[]{"article_has_keyword", "author_of_article", "author_of_article",
                 "author_of_document", "document_has_keyword", "patron_booked_document", "authors", "av_materials",
                 "books", "copies", "patrons", "librarians", "users", "documents", "persons"};
-        for(String table: tables){
+        for (String table : tables) {
             String readyQuery = query.replace("$table_name", table);
             PreparedStatement statement = database.getConnection().prepareStatement(readyQuery);
             statement.executeUpdate();
         }
     }
 
-    private void setDatabaseToDAO(){
+    private void setDatabaseToDAO() {
         AuthorDAO.setDatabase(database);
         AVMaterialDAO.setDatabase(database);
         BookDAO.setDatabase(database);
@@ -62,7 +65,7 @@ public class Testcase {
     }
 
     /*
-        Title: Introduction to Algorithms
+    Title: Introduction to Algorithms
     Authors: Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein Publisher: MIT Press
     Year: 2009
     Edition: Third edition
@@ -122,8 +125,8 @@ public class Testcase {
     public void testcase1() throws SQLException, NoPermissionException, NoSuchObjectException {
         init();
         loggingService.logString("TESTCASE 1 START");
-        librarianService.add(admin, new Librarian("Name1", "Surname1", "admin",
-                "phone_numbe1","address1", "email1"));
+        librarianService.add(admin, new Librarian("Name0", "Surname0", "admin",
+                "phone_numbe0", "address0", "email0"));
         loggingService.logString("TESTCASE 1 FINISH");
 
     }
@@ -132,12 +135,57 @@ public class Testcase {
         init();
         loggingService.logString("TESTCASE 2 START");
         librarianService.add(admin, new Librarian("Eugenia", "Rama", "librarian1",
-                "phone_numbe2","address2", "email2"));
+                "phone_numbe1", "address1", "email1"));
         librarianService.add(admin, new Librarian("Luie", "Ramos", "librarian2",
-                "phone_numbe3","address3", "email3"));
+                "phone_numbe2", "address2", "email2"));
         librarianService.add(admin, new Librarian("Ramon", "Valdez", "librarian3",
-                "phone_numbe4","address4", "email4"));
+                "phone_numbe3", "address3", "email3"));
         loggingService.logString("TESTCASE 2 FINISH");
 
+    }
+
+    public void testcase3() throws SQLException, NoPermissionException, NoSuchObjectException {
+        init();
+        testcase2();
+        loggingService.logString("TESTCASE 3 START");
+
+        Book book1 = new Book( "Introduction to Algorithms", 500,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "MIT Press", LocalDate.of(2009, 1, 1), 3, 2009);
+        book1.getAuthors().add(new Author("Thomas H.", "Cormen"));
+        book1.getAuthors().add(new Author("Charles E.", "Leiserson"));
+        book1.getAuthors().add(new Author("Ronald L.", "Rivest"));
+        book1.getAuthors().add(new Author("Clifford", "Stein"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("data structures"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("complexity"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("computational theory"));
+        documentService.add(LibrarianDAO.getByEmail("email1"), book1);
+        documentService.addCopies(LibrarianDAO.getByEmail("email1"), book1, 3);
+
+        Book book2 = new Book( "Algorithms + Data Structures = Programs", 5000,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "Prentice Hall PTR",
+                LocalDate.of(1978, 1, 1), 1, 1978);
+        book1.getAuthors().add(new Author("Niklaus", "Wirth"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("data structures"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("search algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("Pascal"));
+        documentService.add(LibrarianDAO.getByEmail("email1"), book2);
+        documentService.addCopies(LibrarianDAO.getByEmail("email1"), book2, 3);
+
+        Book book3 = new Book( "The Art of Computer Programming", 5000,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "Addison Wesley Longman Publishing Co., Inc.",
+                LocalDate.of(1997, 1, 1), 1, 1997);
+        book1.getAuthors().add(new Author("Donald E.", "Knuth"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("recursion"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("combinatorial algorithms"));
+        documentService.add(LibrarianDAO.getByEmail("email1"), book3);
+        documentService.addCopies(LibrarianDAO.getByEmail("email1"), book3, 3);
+
+        loggingService.logString("TESTCASE 3 FINISH");
     }
 }

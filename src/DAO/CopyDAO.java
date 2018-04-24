@@ -32,7 +32,29 @@ public class CopyDAO {
         copy.setId(getLastId());
     }
 
-    static void delete(Copy copy) throws SQLException {
+    /**
+     * Creates and inserts copy of document.
+     * @param document
+     * @throws SQLException
+     */
+    public static void insert(Document document) throws SQLException {
+        Copy copy = new Copy(document);
+
+        String query = "INSERT INTO copies (document_id, is_checked_out, holder_id, renew_times, check_out_date, due_date) " +
+                "VALUES (?, ?, ?, ?, ?, ?);";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setInt(1, copy.getDocument().getId());
+        st.setBoolean(2, copy.isCheckedOut());
+        st.setInt(3, copy.getHolder().getId());
+        st.setInt(4, copy.getRenewTimes());
+        st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
+        st.setDate(6, Date.valueOf(copy.getDueDate()));
+        st.executeUpdate();
+
+        copy.setId(getLastId());
+    }
+
+    public static void delete(Copy copy) throws SQLException {
         String query = "DELETE FROM copies WHERE id = ?";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, copy.getId());

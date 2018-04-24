@@ -35,7 +35,7 @@ public class Main {
         try {
             Testcase testcase = new Testcase(database, loggingService, notifyService, bookingService, librarianService,
                     patronService, documentService);
-            testcase.testcase2();
+            testcase.testcase3();
             loggingService.getPrintWriter().close();
         } catch (Exception e) {
             loggingService.getPrintWriter().close();
