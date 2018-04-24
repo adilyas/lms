@@ -9,4 +9,9 @@ public class Author extends Person {
     public Author(String name, String surname) {
         super(name, surname);
     }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

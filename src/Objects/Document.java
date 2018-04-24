@@ -96,4 +96,8 @@ public class Document {
                 .count();
     }
 
+    @Override
+    public String toString() {
+        return "[" + this.id + "]" + this.title + " by " + this.authors.stream().toString() + " value: " + this.value;
+    }
 }

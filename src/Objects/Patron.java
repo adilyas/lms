@@ -26,4 +26,9 @@ public class Patron extends User {
     public Collection<Copy> getCheckedOutCopies() {
         return checkedOutCopies;
     }
+
+    @Override
+    public String toString() {
+        return "Patron " + super.toString();
+    }
 }
