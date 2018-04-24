@@ -27,6 +27,6 @@ public class Keyword {
 
     @Override
     public String toString() {
-        return "[" + this.id + "]" + this.word;
+        return "[ID:" + this.id + "]" + this.word;
     }
 }

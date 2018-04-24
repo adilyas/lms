@@ -40,6 +40,6 @@ public class User extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + "type: " + this.type + "phone: " + this.phoneNumber+ "address: " + this.address + "email: " + this.email;
+        return super.toString() + " type: " + this.type + " email: " + this.email;
     }
 }
