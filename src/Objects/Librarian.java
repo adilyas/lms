@@ -9,4 +9,9 @@ public class Librarian extends User {
     public Librarian(int id, String name, String surname, String type, String phoneNumber, String address, String email) {
         super(id, name, surname, type, phoneNumber, address, email);
     }
+
+    @Override
+    public String toString() {
+        return "Librarian " + super.toString();
+    }
 }
