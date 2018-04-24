@@ -13,7 +13,7 @@ public class PersonDAO {
     static private Database database;
 
     public static void setDatabase(Database database) {
-        database = database;
+        PersonDAO.database = database;
     }
 
     static Person get(int id) throws SQLException {
