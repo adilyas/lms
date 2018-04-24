@@ -18,14 +18,13 @@ public class PatronDAO {
     }
 
     public static void insert(Patron patron) throws SQLException {
-        PersonDAO.insert(patron);
+        UserDAO.insert(patron);
 
         String query = "INSERT INTO patrons (person_id) " +
                 "VALUES (?);";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, patron.getId());
         st.executeUpdate();
-
     }
 
     public static void delete(Patron patron) throws SQLException {

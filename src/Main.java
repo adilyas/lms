@@ -32,9 +32,14 @@ public class Main {
         LibrarianService librarianService = new LibrarianService(loggingService);
         PatronService patronService = new PatronService(loggingService);
         DocumentService documentService = new DocumentService(loggingService);
-
-        Testcase testcase = new Testcase(database, loggingService, notifyService, bookingService, librarianService,
-                patronService, documentService);
-        testcase.testcase1();
+        try {
+            Testcase testcase = new Testcase(database, loggingService, notifyService, bookingService, librarianService,
+                    patronService, documentService);
+            testcase.testcase2();
+            loggingService.getPrintWriter().close();
+        } catch (Exception e) {
+            loggingService.getPrintWriter().close();
+            throw e;
+        }
     }
 }

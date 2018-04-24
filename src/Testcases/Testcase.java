@@ -20,6 +20,7 @@ public class Testcase {
     private LibrarianService librarianService;
     private PatronService patronService;
     private DocumentService documentService;
+    private Librarian admin;
 
     public Testcase(Database database, LoggingService loggingService, NotifyService notifyService,
                     BookingService bookingService, LibrarianService librarianService, PatronService patronService,
@@ -36,9 +37,8 @@ public class Testcase {
     private void cleanTables() throws SQLException {
         String query = "DELETE FROM $table_name WHERE TRUE;";
         String[] tables = new String[]{"article_has_keyword", "author_of_article", "author_of_article",
-                "author_of_document", "authors", "av_materials", "books", "copies", "document_has_keyword", "documents",
-                "journal_articles", "journal_issues", "keywords", "librarians", "patron_booked_document", "patrons",
-                "persons", "users"};
+                "author_of_document", "document_has_keyword", "patron_booked_document", "authors", "av_materials",
+                "books", "copies", "patrons", "librarians", "users", "documents", "persons"};
         for(String table: tables){
             String readyQuery = query.replace("$table_name", table);
             PreparedStatement statement = database.getConnection().prepareStatement(readyQuery);
@@ -61,16 +61,83 @@ public class Testcase {
         UserDAO.setDatabase(database);
     }
 
-    public void testcase1() throws SQLException, NoPermissionException, NoSuchObjectException {
+    /*
+        Title: Introduction to Algorithms
+    Authors: Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest and Clifford Stein Publisher: MIT Press
+    Year: 2009
+    Edition: Third edition
+    Note: NA
+    Price: 5000 rub.
+    keywords: Algorithms, Data Structures, Complexity, Computational Theory
+    d2
+    Title: Algorithms + Data Structures = Programs Authors: Niklaus Wirth
+    Publisher: Prentice Hall PTR
+    Year: 1978
+    Edition: First edition
+    Note: NA
+    Price: 5000 rub.
+    keywords: Algorithms, Data Structures, Search Algorithms, Pascal
+    d3
+    Title: The Art of Computer Programming
+    Authors: Donald E. Knuth
+    Publisher: Addison Wesley Longman Publishing Co., Inc. Year: 1997
+    Edition: Third edition
+    Note: NA
+    Price: 5000 rub.
+    keywords: Algorithms, Combinatorial Algorithms, Recursion
+    p1
+    Name: Sergey Afonso Address: Via Margutta, 3 Phone Number: 30001 Lib. card ID: 1010
+    Type: Faculty (Professor)
+    p2
+    Name: Nadia Teixeira Address: Via Sacra, 13 Phone Number: 30002 Lib. card ID: 1011
+    Type: Faculty (Professor)
+    p3
+    Name: Elvira Espindola Address: Via del Corso, 22 Phone Number: 30003 Lib. card ID: 1100
+    Type: Faculty (Professor)
+    7
+    s
+    Name: Andrey Velo
+    Address: Avenida Mazatlan 250 Phone Number: 30004
+    Lib. card ID: 1101
+    Type: Student
+    v
+    Name: Veronika Rama Address: Stret Atocha, 27 Phone Number: 30005 Lib. card ID: 1110
+    Type: Visiting Professor
+    l1
+    Name: Eugenia Rama Privilege: Priv1
+    l2
+    Name: Luie Ramos Privilege: Priv2
+    l3
+    Name: Ramon Valdez Privilege: Priv3
+     */
+
+    public void init() throws SQLException {
         cleanTables();
         setDatabaseToDAO();
-        Librarian admin = new Librarian("Name", "Surname", "admin", "phone_number",
+        admin = new Librarian("Name", "Surname", "admin", "phone_number",
                 "address", "email");
         LibrarianDAO.insert(admin);
+    }
+
+    public void testcase1() throws SQLException, NoPermissionException, NoSuchObjectException {
+        init();
         loggingService.logString("TESTCASE 1 START");
         librarianService.add(admin, new Librarian("Name1", "Surname1", "admin",
-                "phone_number1","address1", "email1"));
+                "phone_numbe1","address1", "email1"));
         loggingService.logString("TESTCASE 1 FINISH");
+
+    }
+
+    public void testcase2() throws SQLException, NoPermissionException, NoSuchObjectException {
+        init();
+        loggingService.logString("TESTCASE 2 START");
+        librarianService.add(admin, new Librarian("Eugenia", "Rama", "librarian1",
+                "phone_numbe2","address2", "email2"));
+        librarianService.add(admin, new Librarian("Luie", "Ramos", "librarian2",
+                "phone_numbe3","address3", "email3"));
+        librarianService.add(admin, new Librarian("Ramon", "Valdez", "librarian3",
+                "phone_numbe4","address4", "email4"));
+        loggingService.logString("TESTCASE 2 FINISH");
 
     }
 }

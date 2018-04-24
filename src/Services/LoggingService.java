@@ -6,6 +6,10 @@ import java.io.PrintWriter;
 
 public class LoggingService {
 
+    public PrintWriter getPrintWriter() {
+        return printWriter;
+    }
+
     private PrintWriter printWriter;
 
     public LoggingService(String fileLocation) throws FileNotFoundException {

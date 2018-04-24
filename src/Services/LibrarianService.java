@@ -26,7 +26,7 @@ public class LibrarianService {
             throw new NoPermissionException(librarian.getType() + " privileges don't give right to add librarians.");
         }
 
-        if (isPossibleType(librarian)) {
+        if (!isPossibleType(librarian)) {
             loggingService.logString("ADD LIBRARIAN FINISH\n" +
                     "RESULT " + "Librarian of type " + librarian.getType() + " can't be added to library.");
             throw new NoSuchObjectException("Librarian of type " + librarian.getType() + " can't be added to library.");
@@ -80,7 +80,7 @@ public class LibrarianService {
             throw new NoPermissionException(librarian.getType() + " privileges don't give right to modify librarians.");
         }
 
-        if (isPossibleType(librarian) && !librarian.getType().equals("admin")) {
+        if (!(isPossibleType(librarian) || librarian.getType().equals("admin"))) {
             loggingService.logString("ADD LIBRARIAN FINISH\n" +
                     "RESULT " + "Librarian of type " + librarian.getType() + " can't be in library.");
             throw new NoSuchObjectException("Librarian of type " + librarian.getType() + " can't be in library.");
