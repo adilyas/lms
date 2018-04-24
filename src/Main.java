@@ -23,6 +23,7 @@ public class Main {
             System.out.println("We're connected");
         } catch (Exception e) {
             System.out.println("Failed to connect to the database.");
+            System.out.println(e.toString());
         }
         database.setConnection(connection);
         LoggingService loggingService = new LoggingService("logs.txt");
