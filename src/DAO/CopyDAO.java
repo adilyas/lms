@@ -13,7 +13,7 @@ public class CopyDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         CopyDAO.database = database;
     }
 

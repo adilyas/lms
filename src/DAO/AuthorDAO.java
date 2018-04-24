@@ -12,7 +12,7 @@ public class AuthorDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         AuthorDAO.database = database;
     }
 

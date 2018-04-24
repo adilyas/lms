@@ -13,7 +13,7 @@ public class PatronDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         PatronDAO.database = database;
     }
 

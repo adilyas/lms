@@ -13,7 +13,7 @@ public class JournalIssueDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         JournalIssueDAO.database = database;
     }
 

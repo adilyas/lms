@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class KeywordDAO {
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         KeywordDAO.database = database;
     }
 

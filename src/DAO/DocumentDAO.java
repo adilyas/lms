@@ -15,7 +15,7 @@ public class DocumentDAO {
 
     static private Database database;
 
-    static void setDatabase(Database database) {
+    public static void setDatabase(Database database) {
         DocumentDAO.database = database;
     }
 
