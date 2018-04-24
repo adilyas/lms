@@ -24,7 +24,7 @@ public class JournalArticleDAO {
         st.setInt(1, journalArticle.getJournalIssue().getId());
         st.setString(2, journalArticle.getTitle());
         st.executeUpdate();
-        database.getConnection().commit();
+
         journalArticle.setId(getLastId());
 
         query = "INSERT INTO author_of_article VALUES(?, ?);";
@@ -34,7 +34,7 @@ public class JournalArticleDAO {
             st.setInt(1, journalArticle.getId());
             st.setInt(2, author.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
 
         query = "INSERT INTO article_has_keyword VALUES(?, ?);";
@@ -44,7 +44,7 @@ public class JournalArticleDAO {
             st.setInt(1, journalArticle.getId());
             st.setInt(2, word.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
     }
 
@@ -53,19 +53,19 @@ public class JournalArticleDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM author_of_article WHERE article_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM article_has_keyword WHERE article_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static JournalArticle get(int id) throws SQLException {
@@ -73,7 +73,7 @@ public class JournalArticleDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (!rs.next())
             throw new NoSuchElementException();
         JournalArticle journalArticle = new JournalArticle(rs.getInt("id"), rs.getString("title"),
@@ -83,7 +83,7 @@ public class JournalArticleDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             journalArticle.getKeywords().add(new Keyword(rs.getInt("id"), rs.getString("word")));
 
@@ -92,7 +92,7 @@ public class JournalArticleDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             journalArticle.getAuthors().add(new Author(rs.getInt("id"), rs.getString("name"),
                     rs.getString("surname")));
@@ -107,13 +107,13 @@ public class JournalArticleDAO {
         st.setString(2, journalArticle.getTitle());
         st.setInt(3, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM author_of_article WHERE article_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "INSERT INTO author_of_article VALUES(?, ?);";
         st = database.getConnection().prepareStatement(query);
@@ -122,14 +122,14 @@ public class JournalArticleDAO {
             st.setInt(1, journalArticle.getId());
             st.setInt(2, author.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
 
         query = "DELETE FROM article_has_keyword WHERE article_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, journalArticle.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "INSERT INTO article_has_keyword VALUES(?, ?);";
         st = database.getConnection().prepareStatement(query);
@@ -138,7 +138,7 @@ public class JournalArticleDAO {
             st.setInt(1, journalArticle.getId());
             st.setInt(2, word.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
     }
 

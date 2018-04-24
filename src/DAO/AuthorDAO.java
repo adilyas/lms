@@ -21,7 +21,7 @@ public class AuthorDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return new Author(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -35,7 +35,7 @@ public class AuthorDAO {
         st.setString(1, author.getName());
         st.setString(2, author.getSurname());
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return new Author(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
         } else {
@@ -51,7 +51,7 @@ public class AuthorDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, author.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static void update(Author author) throws SQLException {
@@ -63,7 +63,7 @@ public class AuthorDAO {
         PreparedStatement st = database.getConnection().prepareStatement(docAddQuery);
         st.setInt(1, author.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         PersonDAO.delete(author);
     }

@@ -25,7 +25,7 @@ public class LibrarianDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static void delete(Librarian librarian) throws SQLException {
@@ -33,7 +33,7 @@ public class LibrarianDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, librarian.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         PersonDAO.delete(librarian);
     }
@@ -45,7 +45,7 @@ public class LibrarianDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return (Librarian) person;
         } else {

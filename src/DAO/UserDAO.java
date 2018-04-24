@@ -36,7 +36,7 @@ public class UserDAO {
         st.setString(4, user.getAddress());
         st.setString(5, user.getEmail());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     /**
@@ -52,7 +52,7 @@ public class UserDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, user.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         PersonDAO.delete(user);
     }
@@ -72,7 +72,7 @@ public class UserDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (rs.next()) {
             return new User(person.getId(), person.getName(), person.getSurname(), rs.getString("type"), rs.getString("phone_number"),
                     rs.getString("address"), rs.getString("email"));
@@ -104,6 +104,6 @@ public class UserDAO {
         st.setString(4, user.getEmail());
         st.setInt(5, user.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 }

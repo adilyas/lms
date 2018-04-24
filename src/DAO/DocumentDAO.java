@@ -35,7 +35,7 @@ public class DocumentDAO {
         st.setInt(3, document.getValue());
         st.setBoolean(4, document.isOutstandingRequest());
         st.executeUpdate();
-        database.getConnection().commit();
+
         document.setId(getLastId());
 
         query = "INSERT INTO author_of_document VALUES(?, ?);";
@@ -45,7 +45,7 @@ public class DocumentDAO {
             st.setInt(1, document.getId());
             st.setInt(2, author.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
 
         query = "INSERT INTO document_has_keyword VALUES(?, ?);";
@@ -55,7 +55,7 @@ public class DocumentDAO {
             st.setInt(1, document.getId());
             st.setInt(2, word.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
     }
 
@@ -72,19 +72,19 @@ public class DocumentDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM document_has_keyword WHERE document_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM documents WHERE id = ?";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     /**
@@ -100,7 +100,7 @@ public class DocumentDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, id);
         ResultSet rs = st.executeQuery();
-        database.getConnection().commit();
+
         if (!rs.next())
             throw new NoSuchElementException();
         Document result = new Document(rs.getInt("id"), rs.getString("type"),
@@ -112,7 +112,7 @@ public class DocumentDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             result.getKeywords().add(new Keyword(rs.getInt("id"), rs.getString("word")));
 
@@ -121,7 +121,7 @@ public class DocumentDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             result.getAuthors().add(new Author(rs.getInt("id"), rs.getString("name"),
                     rs.getString("surname")));
@@ -132,7 +132,7 @@ public class DocumentDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             result.getBookedBy().add(PatronDAO.get(rs.getInt("id")));
 
@@ -142,7 +142,7 @@ public class DocumentDAO {
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
-        database.getConnection().commit();
+
         while (rs.next())
             result.getCopies().add(CopyDAO.get(rs.getInt("id")));
 
@@ -165,13 +165,13 @@ public class DocumentDAO {
         st.setBoolean(4, document.isOutstandingRequest());
         st.setInt(5, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "DELETE FROM author_of_document WHERE document_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "INSERT INTO author_of_document VALUES(?, ?);";
         st = database.getConnection().prepareStatement(query);
@@ -180,14 +180,14 @@ public class DocumentDAO {
             st.setInt(1, document.getId());
             st.setInt(2, author.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
 
         query = "DELETE FROM document_has_keyword WHERE document_id = ?;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, document.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         query = "INSERT INTO document_has_keyword VALUES(?, ?);";
         st = database.getConnection().prepareStatement(query);
@@ -196,7 +196,7 @@ public class DocumentDAO {
             st.setInt(1, document.getId());
             st.setInt(2, word.getId());
             st.executeUpdate();
-            database.getConnection().commit();
+
         }
     }
 

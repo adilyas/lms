@@ -25,7 +25,7 @@ public class AVMaterialDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, avMaterial.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static void delete(AVMaterial avMaterial) throws SQLException {
@@ -33,7 +33,7 @@ public class AVMaterialDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, avMaterial.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         DocumentDAO.delete(avMaterial);
     }

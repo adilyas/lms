@@ -33,7 +33,7 @@ public final class BookDAO {
         st.setInt(6, book.getEdition());
         st.setInt(7, book.getEditionYear());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 
     static void delete(Book book) throws SQLException {
@@ -41,7 +41,7 @@ public final class BookDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, book.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
 
         DocumentDAO.delete(book);
     }
@@ -77,6 +77,6 @@ public final class BookDAO {
         st.setInt(6, book.getEditionYear());
         st.setInt(7, book.getId());
         st.executeUpdate();
-        database.getConnection().commit();
+
     }
 }
