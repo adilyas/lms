@@ -43,6 +43,6 @@ public class Person {
 
     @Override
     public String toString() {
-        return "[ID:" + this.id +"]" + this.name + ' ' + this.surname;
+        return "[ID:" + this.id +"] " + this.name + ' ' + this.surname;
     }
 }
