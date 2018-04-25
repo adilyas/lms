@@ -101,6 +101,6 @@ public class Document {
 
     @Override
     public String toString() {
-        return "[ID:" + this.id + "]" + this.title + " by " + this.authors.stream().filter(Objects::nonNull).map((author) -> author.toString()).collect(Collectors.joining(" "));
+        return "[ID:" + this.id + "] " + this.title + " by " + this.authors.stream().filter(Objects::nonNull).map((author) -> author.toString()).collect(Collectors.joining(" "));
     }
 }
