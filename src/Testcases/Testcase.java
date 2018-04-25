@@ -6,7 +6,6 @@ import Objects.*;
 import Services.*;
 
 import javax.naming.NoPermissionException;
-import javax.print.Doc;
 import java.rmi.NoSuchObjectException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -264,22 +263,27 @@ public class Testcase {
         testcase4();
         loggingService.logString("TESTCASE 6 START");
 
-        Patron p1 = (Patron) CoolUserDAO.getByEmail("email4");
+        Patron s = PatronDAO.getByEmail("email4");
+        Patron p1 = PatronDAO.getByEmail("email5");
+        Patron p2 = PatronDAO.getByEmail("email6");
+        Patron p3 = PatronDAO.getByEmail("email7");
+        Patron v = PatronDAO.getByEmail("email8");
+        Librarian l1 = LibrarianDAO.getByEmail("email1");
         Document d3 = CoolDocumentDAO.getByTitle("The Art of Computer Programming");
-        bookingService.checkOut(p1, null, d3);
 
-        Patron p2 = (Patron) CoolUserDAO.getByEmail("");
-        bookingService.checkOut(p2, null, d3);
+        bookingService.book(p1, d3);
+        bookingService.book(p2, d3);
+        bookingService.book(s, d3);
+        bookingService.book(v, d3);
+        bookingService.book(p3, d3);
 
-        Patron s = (Patron) CoolUserDAO.getByEmail("email7");
-        bookingService.checkOut(s, null, d3);
+        bookingService.checkOut(p1, l1, d3);
+        bookingService.checkOut(p2, l1, d3);
+        bookingService.checkOut(s, l1, d3);
+//        bookingService.checkOut(v, l1, d3);
+//        bookingService.checkOut(p3, l1, d3);
 
-        Patron v = (Patron) CoolUserDAO.getByEmail("email8");;
-        bookingService.checkOut(v, null, d3);
-
-        Patron p3 = (Patron) CoolUserDAO.getByEmail("email6");
-        bookingService.checkOut(p3, null, d3);
-
-//        bookingService.book(Librarian, );
+        bookingService.startOutstandingRequest(l1, d3);
+        loggingService.logString("TESTCASE 6 FINISH");
     }
 }

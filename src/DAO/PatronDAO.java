@@ -83,7 +83,7 @@ public class PatronDAO {
         UserDAO.update(patron);
     }
 
-    static Patron getByEmail(String email) throws SQLException {
+    public static Patron getByEmail(String email) throws SQLException {
         User user = UserDAO.getByEmail(email);
         int id = user.getId();
 

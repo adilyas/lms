@@ -245,10 +245,16 @@ public class BookingService {
      * @param document
      * @throws SQLException
      */
-    public void startOutstandingRequest(Librarian librarian, Document document) throws SQLException {
+    public void startOutstandingRequest(Librarian librarian, Document document) throws SQLException, NoPermissionException {
         loggingService.logString("START OUTSTANDING REQUEST START\n" +
                 "LIBRARIAN " + librarian + "\n" +
                 "DOCUMENT " + document + "\n");
+
+        if (!librarian.getType().equals("librarian2") && !librarian.getType().equals("librarian3")) {
+            loggingService.logString("START OUTSTANDING REQUEST FINISH\n" +
+                    "RESULT " + librarian.getType() + " privileges don't give right to start outstanding request.");
+            throw new NoPermissionException(librarian.getType() + " privileges don't give right to start outstanding request.");
+        }
 
         notifyService.notify(document.getBookedBy(), "Sorry your request for " + document.getTitle() +
                 " was declined because of outstanding request. Can try to book this book again or ask librarian.");
@@ -277,14 +283,20 @@ public class BookingService {
      * @param document
      * @throws SQLException
      */
-    public void finishOutstandingRequest(Librarian librarian, Document document) throws SQLException {
-        loggingService.logString("OUTSTANDING REQUEST Fi\n" +
+    public void finishOutstandingRequest(Librarian librarian, Document document) throws SQLException, NoPermissionException {
+        loggingService.logString("FINISH OUTSTANDING REQUEST START\n" +
                 "LIBRARIAN " + librarian + "\n" +
                 "DOCUMENT " + document + "\n");
 
+        if (!librarian.getType().equals("librarian2") && !librarian.getType().equals("librarian3")) {
+            loggingService.logString("FINISH OUTSTANDING REQUEST FINISH\n" +
+                    "RESULT " + librarian.getType() + " privileges don't give right to stop outstanding request.");
+            throw new NoPermissionException(librarian.getType() + " privileges don't give right to stop outstanding request.");
+        }
+
         document.setOutstandingRequest(false);
 
-        loggingService.logString("OUTSTANDING REQUEST FINISH\n" +
+        loggingService.logString("FINISH OUTSTANDING REQUEST FINISH\n" +
                 "RESULT Queue for document cleaned, patrons who checked out book notified");
     }
 }
