@@ -2,10 +2,7 @@ package Testcases;
 
 import DAO.*;
 import Database.Database;
-import Objects.Author;
-import Objects.Book;
-import Objects.Copy;
-import Objects.Librarian;
+import Objects.*;
 import Services.*;
 
 import javax.naming.NoPermissionException;
@@ -187,5 +184,63 @@ public class Testcase {
         documentService.addCopies(LibrarianDAO.getByEmail("email1"), book3, 3);
 
         loggingService.logString("TESTCASE 3 FINISH");
+    }
+
+    public void testcase4()  throws SQLException, NoPermissionException, NoSuchObjectException {
+        init();
+        testcase2();
+        loggingService.logString("TESTCASE 4 START");
+
+        Librarian l2 = new Librarian("Luie", "Ramos", "librarian2", "missing", "missing", "missing");
+
+        Book book1 = new Book( "Introduction to Algorithms", 500,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "MIT Press", LocalDate.of(2009, 1, 1), 3, 2009);
+        book1.getAuthors().add(new Author("Thomas H.", "Cormen"));
+        book1.getAuthors().add(new Author("Charles E.", "Leiserson"));
+        book1.getAuthors().add(new Author("Ronald L.", "Rivest"));
+        book1.getAuthors().add(new Author("Clifford", "Stein"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("data structures"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("complexity"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("computational theory"));
+        documentService.add(l2, book1);
+        documentService.addCopies(l2, book1, 3);
+
+        Book book2 = new Book( "Algorithms + Data Structures = Programs", 5000,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "Prentice Hall PTR",
+                LocalDate.of(1978, 1, 1), 1, 1978);
+        book1.getAuthors().add(new Author("Niklaus", "Wirth"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("data structures"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("search algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("Pascal"));
+        documentService.add(l2, book2);
+        documentService.addCopies(l2, book2, 3);
+
+        Book book3 = new Book( "The Art of Computer Programming", 5000,
+                false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
+                false, false, "Addison Wesley Longman Publishing Co., Inc.",
+                LocalDate.of(1997, 1, 1), 1, 1997);
+        book1.getAuthors().add(new Author("Donald E.", "Knuth"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("algorithms"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("recursion"));
+        book1.getKeywords().add(KeywordDAO.getByWordOrCreate("combinatorial algorithms"));
+        documentService.add(l2, book3);
+        documentService.addCopies(l2, book3, 3);
+
+        Patron p1 = new Patron(1010, "Sergey", "Afonso", "professor", "30001", "Via Margutta, 3", "missing");
+        Patron p2 = new Patron(1011, "Nadia", "Teixeira", "professor", "30002", "Via Sacra, 13", "missing");
+        Patron p3 = new Patron(1100, "Elvira", "Espindola", "professor", "30003", "Via del Corso, 22", "missing");
+        Patron s = new Patron(1101, "Andrey", "Velo", "student", "30004", "Avenida Mazatlan 250", "missing");
+        Patron v = new Patron (1110, "Veronika", "Rama", "VP", "30005", "Stret Atocha, 27", "missing");
+        patronService.add(l2, p1);
+        patronService.add(l2, p2);
+        patronService.add(l2, p3);
+        patronService.add(l2, s);
+        patronService.add(l2, v);
+
+//        l2 checks information about the system?
     }
 }
