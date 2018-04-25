@@ -126,8 +126,8 @@ public class DocumentDAO {
                     rs.getString("surname")));
 
         query = "SELECT p.id FROM persons p JOIN patron_booked_document pd ON p.id = pd.person_id " +
-                "JOIN documents d ON d.id = pd.document_id WHERE document_id = ?" +
-                "ORDER BY priority, request_date ASC;";
+                "JOIN documents d ON d.id = pd.document_id WHERE document_id = ? " +
+                "ORDER BY priority ASC, request_date ASC;";
         st = database.getConnection().prepareStatement(query);
         st.setInt(1, result.getId());
         rs = st.executeQuery();
@@ -143,18 +143,80 @@ public class DocumentDAO {
         rs = st.executeQuery();
 
         while (rs.next())
-            result.getCopies().add(CopyDAO.get(rs.getInt("id")));
+            result.getCopies().add(CopyDAO.get(rs.getInt("id"), result));
 
         return result;
     }
 
     /**
-     * Updates existing data in the database.
-     * Resets all the fields like in insert, but saves table's structure and id.
+     * Given the title returns Document class' instance with filled all other fields.
+     * This method is temporal, because title not necessary unique.
      *
-     * @param document instance containing new values to update.
+     * @param title document's title in the database.
+     * @return Document  class' instance containing all information about the document.
      * @throws SQLException
      */
+    static Document getByTitle(String title) throws SQLException {
+        String query = "SELECT * FROM documents WHERE title = ?;";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setString(1, title);
+        ResultSet rs = st.executeQuery();
+
+        if (!rs.next())
+            throw new NoSuchElementException();
+        Document result = new Document(rs.getInt("id"), rs.getString("type"),
+                rs.getString("title"), rs.getInt("value"),
+                rs.getBoolean("outstanding_request"), new ArrayList<>(), new ArrayList<>(),
+                new ArrayList<>(), new ArrayList<>());
+
+        query = "SELECT id, word FROM keywords JOIN document_has_keyword ON keyword_id = id WHERE document_id = ?";
+        st = database.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+
+        while (rs.next())
+            result.getKeywords().add(new Keyword(rs.getInt("id"), rs.getString("word")));
+
+        query = "SELECT id, name, surname FROM persons JOIN authors ON id = person_id" +
+                " JOIN author_of_document ON person_id = author_id WHERE document_id = ?";
+        st = database.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+
+        while (rs.next())
+            result.getAuthors().add(new Author(rs.getInt("id"), rs.getString("name"),
+                    rs.getString("surname")));
+
+        query = "SELECT p.id FROM persons p JOIN patron_booked_document pd ON p.id = pd.person_id " +
+                "JOIN documents d ON d.id = pd.document_id WHERE document_id = ? " +
+                "ORDER BY priority ASC, request_date ASC;";
+        st = database.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+
+        while (rs.next())
+            result.getBookedBy().add(PatronDAO.get(rs.getInt("id")));
+
+        query = "SELECT id FROM copies " +
+                "WHERE document_id = ? " +
+                "ORDER BY is_checked_out ASC;";
+        st = database.getConnection().prepareStatement(query);
+        st.setInt(1, result.getId());
+        rs = st.executeQuery();
+
+        while (rs.next())
+            result.getCopies().add(CopyDAO.get(rs.getInt("id"), result));
+
+        return result;
+    }
+
+        /**
+         * Updates existing data in the database.
+         * Resets all the fields like in insert, but saves table's structure and id.
+         *
+         * @param document instance containing new values to update.
+         * @throws SQLException
+         */
     static void update(Document document) throws SQLException {
         String query = "UPDATE documents SET type = ?, title = ?, value = ?, outstanding_request = ? WHERE id = ?;";
         PreparedStatement st = database.getConnection().prepareStatement(query);

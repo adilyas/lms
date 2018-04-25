@@ -41,6 +41,22 @@ public class CoolDocumentDAO {
         }
     }
 
+    public static Document getByTitle(String title) throws SQLException {
+        Document document = DocumentDAO.getByTitle(title);
+        int id = document.getId();
+
+        switch (document.getType()) {
+            case "book":
+                return BookDAO.get(id);
+            case "av_material":
+                return AVMaterialDAO.get(id);
+            case "journal_issue":
+                return JournalIssueDAO.get(id);
+            default:
+                throw new NoSuchElementException("Wrong type");
+        }
+    }
+
     public static void delete(Document document) throws SQLException {
         switch (document.getType()) {
             case "book":

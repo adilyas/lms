@@ -58,7 +58,7 @@ public final class BookDAO {
                     document.getAuthors(), document.getKeywords(), document.getBookedBy(), document.getCopies(),
                     rs.getBoolean("is_reference"), rs.getBoolean("is_bestseller"),
                     rs.getString("Publisher"), rs.getDate("date_of_publishing").toLocalDate(),
-                    rs.getInt("edition"), rs.getInt("editionYear"));
+                    rs.getInt("edition"), rs.getInt("edition_year"));
         else
             throw new NoSuchElementException();
     }

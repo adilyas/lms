@@ -2,10 +2,7 @@ package Testcases;
 
 import DAO.*;
 import Database.Database;
-import Objects.Author;
-import Objects.Book;
-import Objects.Librarian;
-import Objects.Patron;
+import Objects.*;
 import Services.*;
 
 import javax.naming.NoPermissionException;
@@ -145,7 +142,6 @@ public class Testcase {
     }
 
     public void testcase3() throws SQLException, NoPermissionException, NoSuchObjectException {
-        init();
         testcase2();
         loggingService.logString("TESTCASE 3 START");
 
@@ -191,7 +187,6 @@ public class Testcase {
     }
 
     public void testcase4() throws SQLException, NoPermissionException, NoSuchObjectException {
-        init();
         testcase2();
         loggingService.logString("TESTCASE 4 START");
         Librarian l2 = LibrarianDAO.getByEmail("email2");
@@ -255,14 +250,12 @@ public class Testcase {
     }
 
     public void testcase5() throws SQLException, NoPermissionException, NoSuchObjectException {
-        init();
         testcase4();
         loggingService.logString("TESTCASE 5 START");
 
         Librarian l3 = LibrarianDAO.getByEmail("email3");
+        documentService.deleteCopies(l3, CoolDocumentDAO.getByTitle("Introduction to Algorithms"), 1);
 
-//        Document d1 = DocumentDAO.get()
-//        l3 =
-
+        loggingService.logString("TESTCASE 5 FINISH");
     }
 }

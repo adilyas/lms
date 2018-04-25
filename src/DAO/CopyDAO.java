@@ -68,6 +68,21 @@ public class CopyDAO {
                 rs.getDate("due_date").toLocalDate());
     }
 
+    static Copy get(int id, Document document) throws SQLException {
+        String query = "SELECT * FROM copies WHERE id = ?;";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setInt(1, id);
+        ResultSet rs = st.executeQuery();
+
+        if (!rs.next())
+            throw new NoSuchElementException();
+        return new Copy(rs.getInt("id"), document,
+                (rs.getInt("holder_id")!=0?PatronDAO.get(rs.getInt("holder_id")):null),
+                rs.getBoolean("is_checked_out"), rs.getInt("renew_times"),
+                (rs.getDate("check_out_date")!=null?rs.getDate("check_out_date").toLocalDate():null),
+                (rs.getDate("due_date")!=null?rs.getDate("due_date").toLocalDate():null));
+    }
+
     public static void update(Copy copy) throws SQLException {
         String query = "UPDATE copies SET document_id = ?, is_checked_out = ?, holder_id = ?, renew_times = ?, " +
                 "check_out_date = ?, due_date = ? WHERE id = ?;";
