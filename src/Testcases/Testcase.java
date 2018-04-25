@@ -6,6 +6,7 @@ import Objects.*;
 import Services.*;
 
 import javax.naming.NoPermissionException;
+import javax.print.Doc;
 import java.rmi.NoSuchObjectException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -186,12 +187,14 @@ public class Testcase {
         loggingService.logString("TESTCASE 3 FINISH");
     }
 
-    public void testcase4()  throws SQLException, NoPermissionException, NoSuchObjectException {
+    public void testcase4() throws SQLException, NoPermissionException, NoSuchObjectException {
         init();
         testcase2();
         loggingService.logString("TESTCASE 4 START");
 
-        Librarian l2 = new Librarian("Luie", "Ramos", "librarian2", "missing", "missing", "missing");
+        Librarian l2 = new Librarian("Luie", "Ramos", "librarian2", "missing", "missing", "email2");
+        librarianService.add(admin, l2);
+        l2 = LibrarianDAO.getByEmail("email2");
 
         Book book1 = new Book( "Introduction to Algorithms", 500,
                 false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>(),
@@ -242,5 +245,19 @@ public class Testcase {
         patronService.add(l2, v);
 
 //        l2 checks information about the system?
+    }
+
+    public void testcase5() throws SQLException, NoPermissionException, NoSuchObjectException {
+        init();
+        testcase4();
+        loggingService.logString("TESTCASE 5 START");
+
+        Librarian l3 = new Librarian("Ramon", "Valdez", "librarian3", "missing", "missing", "email3");
+        librarianService.add(admin, l3);
+        l3 = LibrarianDAO.getByEmail("email3");
+
+//        Document d1 = DocumentDAO.get()
+//        l3 =
+
     }
 }
