@@ -38,17 +38,16 @@ public class DocumentDAO {
 
         document.setId(getLastId());
 
-        query = "INSERT INTO author_of_document VALUES(?, ?);";
+        query = "INSERT INTO author_of_document (document_id, author_id) VALUES (?, ?);";
         st = database.getConnection().prepareStatement(query);
 
         for (Author author : document.getAuthors()) {
             st.setInt(1, document.getId());
             st.setInt(2, author.getId());
             st.executeUpdate();
-
         }
 
-        query = "INSERT INTO document_has_keyword VALUES(?, ?);";
+        query = "INSERT INTO document_has_keyword (document_id, keyword_id) VALUES(?, ?);";
         st = database.getConnection().prepareStatement(query);
 
         for (Keyword word : document.getKeywords()) {

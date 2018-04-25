@@ -3,10 +3,7 @@ package DAO;
 import Database.Database;
 import Objects.*;
 
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.NoSuchElementException;
 
 public class CopyDAO {
@@ -23,10 +20,16 @@ public class CopyDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, copy.getDocument().getId());
         st.setBoolean(2, copy.isCheckedOut());
-        st.setInt(3, copy.getHolder().getId());
+        if(copy.getHolder() == null){
+            st.setNull(3, Types.INTEGER);
+            st.setNull(5, Types.DATE);
+            st.setNull(6, Types.DATE);
+        } else{
+            st.setInt(3, copy.getHolder().getId());
+            st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
+            st.setDate(6, Date.valueOf(copy.getDueDate()));
+        }
         st.setInt(4, copy.getRenewTimes());
-        st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
-        st.setDate(6, Date.valueOf(copy.getDueDate()));
         st.executeUpdate();
 
         copy.setId(getLastId());
@@ -40,18 +43,7 @@ public class CopyDAO {
     public static void insert(Document document) throws SQLException {
         Copy copy = new Copy(document);
 
-        String query = "INSERT INTO copies (document_id, is_checked_out, holder_id, renew_times, check_out_date, due_date) " +
-                "VALUES (?, ?, ?, ?, ?, ?);";
-        PreparedStatement st = database.getConnection().prepareStatement(query);
-        st.setInt(1, copy.getDocument().getId());
-        st.setBoolean(2, copy.isCheckedOut());
-        st.setInt(3, copy.getHolder().getId());
-        st.setInt(4, copy.getRenewTimes());
-        st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
-        st.setDate(6, Date.valueOf(copy.getDueDate()));
-        st.executeUpdate();
-
-        copy.setId(getLastId());
+        insert(copy);
     }
 
     public static void delete(Copy copy) throws SQLException {
@@ -82,10 +74,16 @@ public class CopyDAO {
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, copy.getDocument().getId());
         st.setBoolean(2, copy.isCheckedOut());
-        st.setInt(3, copy.getHolder().getId());
-        st.setInt(4, copy.getId());
-        st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
-        st.setDate(6, Date.valueOf(copy.getDueDate()));
+        if(copy.getHolder() == null){
+            st.setNull(3, Types.INTEGER);
+            st.setNull(5, Types.DATE);
+            st.setNull(6, Types.DATE);
+        } else{
+            st.setInt(3, copy.getHolder().getId());
+            st.setDate(5, Date.valueOf(copy.getCheckedOutDate()));
+            st.setDate(6, Date.valueOf(copy.getDueDate()));
+        }
+        st.setInt(4, copy.getRenewTimes());
         st.setInt(7, copy.getId());
         st.executeUpdate();
 

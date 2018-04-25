@@ -2,6 +2,7 @@ package DAO;
 
 import Database.Database;
 import Objects.Author;
+import Objects.Keyword;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,15 +44,28 @@ public class AuthorDAO {
         }
     }
 
+    public static Author getByNameOrCreate(Author author) throws SQLException {
+        String query = "SELECT * FROM persons JOIN authors ON persons.id = authors.person_id WHERE name = ? AND surname = ?;";
+        PreparedStatement st = database.getConnection().prepareStatement(query);
+        st.setString(1, author.getName());
+        st.setString(2, author.getSurname());
+        ResultSet rs = st.executeQuery();
+
+        if (rs.next()) {
+            return new Author(rs.getInt("id"), rs.getString("name"), rs.getString("surname"));
+        } else {
+            AuthorDAO.insert(author);
+            return author;
+        }
+    }
 
     static void insert(Author author) throws SQLException {
         PersonDAO.insert(author);
-        String query = "INSERT INTO authors (id) " +
+        String query = "INSERT INTO authors (person_id) " +
                 "VALUES (?);";
         PreparedStatement st = database.getConnection().prepareStatement(query);
         st.setInt(1, author.getId());
         st.executeUpdate();
-
     }
 
     static void update(Author author) throws SQLException {

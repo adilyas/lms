@@ -9,6 +9,8 @@ import Objects.Librarian;
 import javax.naming.NoPermissionException;
 import java.sql.SQLException;
 
+import static DAO.CopyDAO.insert;
+
 public class DocumentService {
 
     private LoggingService loggingService;
@@ -29,7 +31,7 @@ public class DocumentService {
         }
 
         try {
-            CoolDocumentDAO.insert(document);
+           CoolDocumentDAO.insert(document);
         } catch (SQLException e) {
             loggingService.logString("ADD DOCUMENT FINISH\n" +
                     "RESULT " + "Something went wrong on data access layer.");
