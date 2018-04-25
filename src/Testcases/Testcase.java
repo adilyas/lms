@@ -6,6 +6,7 @@ import Objects.*;
 import Services.*;
 
 import javax.naming.NoPermissionException;
+import javax.print.Doc;
 import java.rmi.NoSuchObjectException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -257,5 +258,28 @@ public class Testcase {
         documentService.deleteCopies(l3, CoolDocumentDAO.getByTitle("Introduction to Algorithms"), 1);
 
         loggingService.logString("TESTCASE 5 FINISH");
+    }
+
+    public void testcase6() throws SQLException, NoPermissionException, NoSuchObjectException {
+        testcase4();
+        loggingService.logString("TESTCASE 6 START");
+
+        Patron p1 = (Patron) CoolUserDAO.getByEmail("email4");
+        Document d3 = CoolDocumentDAO.getByTitle("The Art of Computer Programming");
+        bookingService.checkOut(p1, null, d3);
+
+        Patron p2 = (Patron) CoolUserDAO.getByEmail("");
+        bookingService.checkOut(p2, null, d3);
+
+        Patron s = (Patron) CoolUserDAO.getByEmail("email7");
+        bookingService.checkOut(s, null, d3);
+
+        Patron v = (Patron) CoolUserDAO.getByEmail("email8");;
+        bookingService.checkOut(v, null, d3);
+
+        Patron p3 = (Patron) CoolUserDAO.getByEmail("email6");
+        bookingService.checkOut(p3, null, d3);
+
+//        bookingService.book(Librarian, );
     }
 }

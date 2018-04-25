@@ -4,6 +4,7 @@ import DAO.CopyDAO;
 import Database.Database;
 import Objects.*;
 
+import javax.naming.NoPermissionException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -118,7 +119,7 @@ public class BookingService {
      * @param document  particular document the patron is checking out
      * @throws SQLException
      */
-    public void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException {
+    public void checkOut(Patron patron, Librarian librarian, Document document) throws SQLException, NoPermissionException {
         loggingService.logString("CHECKOUT START\n" +
                 "BY " + patron + "\n" +
                 "VERIFIED BY " + librarian + "\n" +
@@ -138,6 +139,9 @@ public class BookingService {
                     "RESULT " + "This patron can't take this document due to his place in queue and quantity of free copies.");
             throw new NoSuchElementException("This patron can't take this document due to his place in queue and " +
                     "quantity of free copies.");
+        }
+        if (librarian.getType() == null) {
+            throw new NoPermissionException();
         }
 
         Copy copy = document.getFreeCopy();

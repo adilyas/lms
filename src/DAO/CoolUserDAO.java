@@ -104,7 +104,7 @@ public class CoolUserDAO {
         }
     }
 
-    static User getByEmail(String email) throws SQLException {
+    public static User getByEmail(String email) throws SQLException {
         User user = UserDAO.getByEmail(email);
 
         switch (user.getType()) {
